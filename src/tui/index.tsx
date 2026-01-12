@@ -44,18 +44,18 @@ export async function runTUI(options: TUIOptions = {}) {
   ) => {
     callbacks.onStatus("thinking");
 
-    // Add user message to session
-    await SessionManager.addMessage(session!.id, {
-      role: "user",
-      content: message,
-    });
-
-    // Get all messages
-    const messages = await SessionManager.getMessages(session!.id);
-
-    let fullResponse = "";
-
     try {
+      // Add user message to session
+      await SessionManager.addMessage(session!.id, {
+        role: "user",
+        content: message,
+      });
+
+      // Get all messages
+      const messages = await SessionManager.getMessages(session!.id);
+
+      let fullResponse = "";
+
       await chat({
         sessionId: session!.id,
         messages,
@@ -70,13 +70,14 @@ export async function runTUI(options: TUIOptions = {}) {
           callbacks.onStatus("tool", name);
         },
         onToolResult: (_name, _result) => {
-          callbacks.onStatus("thinking");
+          callbacks.onStatus("streaming");
         },
       });
 
       callbacks.onComplete(fullResponse);
     } catch (err) {
-      callbacks.onError((err as Error).message);
+      const errorMessage = err instanceof Error ? err.message : String(err);
+      callbacks.onError(errorMessage);
     }
   };
 

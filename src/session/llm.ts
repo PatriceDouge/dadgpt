@@ -88,7 +88,7 @@ export async function chat(options: ChatOptions): Promise<ChatResult> {
     content: m.content,
   }));
 
-  // Stream the response
+  // Stream the response with multi-step tool execution
   const result = await streamText({
     model: model as LanguageModel,
     messages: modelMessages,
@@ -100,20 +100,56 @@ export async function chat(options: ChatOptions): Promise<ChatResult> {
   let fullContent = "";
 
   // Process the stream
-  for await (const chunk of result.fullStream) {
-    switch (chunk.type) {
-      case "text-delta":
-        fullContent += chunk.text;
-        onTextChunk?.(chunk.text);
-        break;
+  try {
+    for await (const chunk of result.fullStream) {
+      // Debug: uncomment to see chunk types
+      // console.log("Chunk:", chunk.type);
 
-      case "tool-call":
-        onToolCall?.(chunk.toolName, chunk.input);
-        break;
+      switch (chunk.type) {
+        case "text-delta":
+          fullContent += chunk.text;
+          onTextChunk?.(chunk.text);
+          break;
 
-      case "tool-result":
-        onToolResult?.(chunk.toolName, String(chunk.output));
-        break;
+        case "tool-call":
+          onToolCall?.(chunk.toolName, chunk.input);
+          break;
+
+        case "tool-result":
+          onToolResult?.(chunk.toolName, String(chunk.output));
+          break;
+
+        case "error":
+          throw new Error(String((chunk as { error: unknown }).error));
+
+        case "finish":
+          // Stream finished
+          break;
+
+        // Ignore other chunk types (step-start, step-finish, etc.)
+        default:
+          break;
+      }
+    }
+  } catch (streamError) {
+    // If streaming fails, still try to return what we have
+    if (fullContent) {
+      console.error("Stream error:", streamError);
+    } else {
+      throw streamError;
+    }
+  }
+
+  // If no text content but we had tool calls, get the final text
+  if (!fullContent) {
+    try {
+      const finalText = await result.text;
+      if (finalText) {
+        fullContent = finalText;
+        onTextChunk?.(finalText);
+      }
+    } catch {
+      // Ignore - might already be consumed
     }
   }
 

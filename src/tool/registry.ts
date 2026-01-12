@@ -1,3 +1,4 @@
+import { zodToJsonSchema } from "zod-to-json-schema";
 import type { AnyToolDefinition, ToolContext, ToolResult } from "./types.ts";
 import { goalTool } from "./goal.ts";
 import { todoTool } from "./todo.ts";
@@ -34,16 +35,25 @@ export namespace ToolRegistry {
   }
 
   // Convert our tools to AI SDK format
-  // AI SDK v6 uses inputSchema instead of parameters
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  export function toAITools(ctx: ToolContext): any {
+  export function toAITools(ctx: ToolContext): Record<string, any> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const aiTools: Record<string, any> = {};
 
     for (const t of tools) {
+      // Convert Zod schema to JSON Schema
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const rawSchema = zodToJsonSchema(t.parameters as any, {
+        target: "openApi3",
+        $refStrategy: "none",
+      }) as Record<string, unknown>;
+
+      // Remove $schema field that can cause issues
+      const { $schema, ...jsonSchema } = rawSchema;
+
       aiTools[t.name] = {
         description: t.description,
-        inputSchema: t.parameters,
+        parameters: jsonSchema,
         execute: async (args: unknown) => {
           const result = await t.execute(args, ctx);
           return formatToolResult(result);

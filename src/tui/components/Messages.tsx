@@ -43,20 +43,19 @@ function MessageItem({ message }: MessageItemProps) {
     );
   }
 
+  if (isUser) {
+    return (
+      <Box marginTop={1}>
+        <Text color={colors.user}>{"> "}</Text>
+        <Text color={colors.text}>{message.content}</Text>
+      </Box>
+    );
+  }
+
+  // Assistant message
   return (
     <Box flexDirection="column" marginTop={1}>
-      {isUser ? (
-        <Box>
-          <Text color={colors.user} bold>{"> "}</Text>
-          <Box borderStyle="single" borderColor={colors.border} paddingX={1}>
-            <Text color={colors.text}>{message.content}</Text>
-          </Box>
-        </Box>
-      ) : (
-        <Box>
-          <Text color={colors.text}>{message.content}</Text>
-        </Box>
-      )}
+      <Text color={colors.text}>{message.content}</Text>
     </Box>
   );
 }

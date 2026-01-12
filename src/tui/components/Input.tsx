@@ -19,23 +19,25 @@ export function Input({
   placeholder = "Type a message...",
 }: InputProps) {
   return (
-    <Box
-      borderStyle="single"
-      borderColor={disabled ? colors.textDim : colors.border}
-      paddingX={1}
-      marginTop={1}
-    >
-      <Text color={colors.prompt}>{"> "}</Text>
-      {disabled ? (
-        <Text color={colors.textDim}>{placeholder}</Text>
-      ) : (
-        <TextInput
-          value={value}
-          onChange={onChange}
-          onSubmit={onSubmit}
-          placeholder={placeholder}
-        />
-      )}
+    <Box marginTop={1}>
+      <Box
+        borderStyle="single"
+        borderColor={disabled ? colors.textDim : colors.border}
+        paddingX={1}
+        flexGrow={1}
+      >
+        <Text color={colors.prompt}>{"> "}</Text>
+        {disabled ? (
+          <Text color={colors.textDim}>{placeholder}</Text>
+        ) : (
+          <TextInput
+            value={value}
+            onChange={onChange}
+            onSubmit={onSubmit}
+            placeholder={placeholder}
+          />
+        )}
+      </Box>
     </Box>
   );
 }
