@@ -1,11 +1,11 @@
 import type { CommandModule } from "yargs";
-import * as readline from "readline";
 import { Storage } from "../../storage/storage.ts";
 import { Configuration } from "../../config/config.ts";
 import { SessionManager } from "../../session/session.ts";
 import { chat } from "../../session/llm.ts";
 import { DadGPTParser } from "../../parser/dadgpt-md.ts";
 import { UI } from "../ui.ts";
+import { runTUI } from "../../tui/index.tsx";
 
 interface RunArgs {
   message?: string[];
@@ -156,126 +156,12 @@ async function runSingleMessage(
 }
 
 async function runInteractiveMode(args: RunArgs): Promise<void> {
-  UI.logo();
-
-  // Get or create session
-  let session = args.continue ? await SessionManager.getLatest() : undefined;
-
-  if (session && args.continue) {
-    UI.info(`Continuing session: ${session.title}`);
-    UI.println();
-  }
-
-  if (!session) {
-    session = await SessionManager.create();
-  }
-
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
+  // Use the new TUI
+  await runTUI({
+    provider: args.provider,
+    model: args.model,
+    continueSession: args.continue,
   });
-
-  const promptUser = () => {
-    rl.question(UI.replPrompt(), async (input) => {
-      const trimmed = input.trim();
-
-      // Handle special commands
-      if (trimmed === "/exit" || trimmed === "/quit" || trimmed === "exit" || trimmed === "quit") {
-        UI.println();
-        UI.success("Goodbye!");
-        rl.close();
-        return;
-      }
-
-      if (trimmed === "/help") {
-        showHelp();
-        promptUser();
-        return;
-      }
-
-      if (trimmed === "/clear") {
-        // Start a new session
-        session = await SessionManager.create();
-        UI.success("Started new session");
-        promptUser();
-        return;
-      }
-
-      if (trimmed === "/sessions") {
-        await listSessions();
-        promptUser();
-        return;
-      }
-
-      if (trimmed === "/goals") {
-        await showGoals();
-        promptUser();
-        return;
-      }
-
-      if (trimmed === "/todos") {
-        await showTodos();
-        promptUser();
-        return;
-      }
-
-      if (!trimmed) {
-        promptUser();
-        return;
-      }
-
-      // Process the message
-      await SessionManager.addMessage(session!.id, {
-        role: "user",
-        content: trimmed,
-      });
-
-      // Update title if first message
-      const messages = await SessionManager.getMessages(session!.id);
-      if (messages.length === 1) {
-        await SessionManager.updateSessionTitle(session!.id, trimmed);
-      }
-
-      UI.println();
-
-      try {
-        await chat({
-          sessionId: session!.id,
-          messages,
-          provider: args.provider,
-          model: args.model,
-          onTextChunk: (text) => {
-            UI.print(text);
-          },
-          onToolCall: (name, _args) => {
-            if (args.debug) {
-              UI.println();
-              UI.dim(`[Calling ${name}...]`);
-            }
-          },
-          onToolResult: (name, _result) => {
-            if (args.debug) {
-              UI.dim(`[${name} completed]`);
-            }
-          },
-        });
-      } catch (err) {
-        UI.error(`Error: ${(err as Error).message}`);
-      }
-
-      UI.println();
-      UI.println();
-      promptUser();
-    });
-  };
-
-  // Handle Ctrl+C gracefully
-  rl.on("close", () => {
-    UI.println();
-    process.exit(0);
-  });
-
-  promptUser();
 }
 
 function showHelp(): void {
