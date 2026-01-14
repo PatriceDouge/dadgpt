@@ -14,3 +14,20 @@
 ## Progress Log
 
 <!-- Append progress entries below this line -->
+
+## 2026-01-13 - P1-001
+- What was implemented: Created package.json with all required dependencies and devDependencies
+- Files changed: package.json, pnpm-lock.yaml, .gitignore (new)
+- **Learnings for future iterations:**
+  - pnpm install works correctly with specified versions
+  - Added .gitignore to exclude node_modules/, dist/, coverage/, .env, *.log
+---
+
+## 2026-01-13 - P1-002
+- What was implemented: Created TypeScript configuration for the project
+- Files changed: tsconfig.json (new), src/index.ts (new - minimal entry point)
+- **Learnings for future iterations:**
+  - moduleResolution "bundler" works well with ES modules and tsx
+  - Need at least one .ts file in src/ for typecheck to work (otherwise error about no inputs)
+  - noUncheckedIndexedAccess adds extra safety for array/object access
+---

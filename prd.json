@@ -15,7 +15,7 @@
         "pnpm install completes without errors"
       ],
       "priority": 1,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
@@ -32,7 +32,7 @@
         "pnpm typecheck passes with no errors"
       ],
       "priority": 2,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {
