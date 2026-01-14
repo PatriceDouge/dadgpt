@@ -254,3 +254,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Box component's flexDirection="column" is useful for vertical layouts
   - marginTop/marginBottom props for spacing between elements
 ---
+
+## 2026-01-13 - P3-003
+- What was implemented: Created InputBox component for user text input
+- Files changed: src/tui/components/InputBox.tsx (new)
+- **Learnings for future iterations:**
+  - ink-text-input provides TextInput component as default export
+  - TextInput uses onSubmit callback that receives the submitted value
+  - borderStyle="round" gives rounded corners, borderColor="gray" sets border color
+  - focus prop on TextInput controls whether it accepts keyboard input
+  - When disabled, change placeholder text to indicate waiting state
+---
