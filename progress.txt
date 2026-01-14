@@ -92,3 +92,17 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - getDataPath() auto-appends .json extension
   - Storage layer lives in src/storage/ directory
 ---
+
+## 2026-01-13 - P1-009
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- What was implemented: Created Storage namespace with CRUD operations for JSON file persistence
+- Files changed: src/storage/storage.ts (new)
+- **Learnings for future iterations:**
+  - Use node:fs/promises (not Bun APIs) for file operations
+  - Storage namespace pattern matches other utility modules (Log, Bus, etc.)
+  - Storage.read<T>() returns undefined (not null) when file not found
+  - Storage.write() uses JSON.stringify with null, 2 for pretty printing
+  - Storage.update() provides atomic read-modify-write operation
+  - Storage.list() returns filenames without .json extension
+  - Must import os from "node:os" at top level - cannot use require() in ESM
+---
