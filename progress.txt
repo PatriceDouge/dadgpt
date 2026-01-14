@@ -560,3 +560,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Import DADGPT_HOME from storage/paths.ts for consistent path handling
   - Fixed pre-existing lint error: prefer-const for sessionId in run.ts
 ---
+
+## 2026-01-14 - P5-004
+- What was implemented: Created CLI auth command for configuring API keys interactively
+- Files changed: src/cli/commands/auth.ts (new), src/cli/index.ts (updated)
+- **Learnings for future iterations:**
+  - Use node:readline/promises for interactive prompts in CLI commands
+  - Import readline.Interface and use rl.question() for async prompting
+  - maskApiKey() shows first 4 and last 4 chars with asterisks in between for security
+  - API keys are stored in config.providers[providerId].apiKey
+  - Check both config file and environment variables for existing keys (config takes precedence)
+  - PROVIDERS constant stores metadata: provider name and corresponding env var name
+  - Always close readline interface in finally block to avoid hanging
+---
