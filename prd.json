@@ -971,7 +971,7 @@
         "No unhandled promise rejections"
       ],
       "priority": 55,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

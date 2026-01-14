@@ -680,3 +680,26 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Final assistant message is saved to session storage when loop completes
   - ChatLoopResult contains: content, toolCalls array, aborted flag, usage stats
 ---
+
+## 2026-01-14 - P6-001
+- What was implemented: Comprehensive error handling across the codebase
+- Files changed:
+  - src/index.ts - Added global unhandled rejection and uncaughtException handlers, SIGINT/SIGTERM handlers
+  - src/util/log.ts - Added formatError(), isDebugMode(), toError(), Log.formatAndLogError()
+  - src/cli/commands/run.ts - Added try-catch around render and waitUntilExit
+  - src/cli/commands/goals.ts - Added try-catch around handler with graceful JSON output on error
+  - src/cli/commands/todos.ts - Added try-catch around handler with graceful JSON output on error
+  - src/session/session.ts - Added comprehensive error handling to all Session namespace methods
+  - src/tui/hooks/useSession.ts - Added error state and try-catch blocks for storage operations
+  - src/config/config.ts - Added error handling to Config.save() with ConfigError
+  - src/session/loop.ts - Fixed prefer-const lint error (totalUsage)
+- **Learnings for future iterations:**
+  - Use Log.formatAndLogError(prefix, err) for consistent error logging with stack trace control
+  - formatError() from log.ts shows stack traces only in debug mode (when --debug flag is passed)
+  - isDebugMode() checks if current log level is DEBUG
+  - For graceful degradation: return empty arrays/undefined instead of throwing for read operations
+  - For critical operations (session create, message save): throw custom errors (StorageError, ConfigError)
+  - Always add global handlers for unhandledRejection and uncaughtException in entry point
+  - Handle SIGINT and SIGTERM for clean exits (especially important for CLI apps)
+  - In JSON output mode, output empty array on error to maintain parseable output
+---
