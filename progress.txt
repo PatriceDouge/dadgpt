@@ -750,3 +750,20 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Integration tests follow same patterns as CLI tests: unique temp dirs, env var overrides, Bus.clear() in beforeEach
   - 24 tests cover: create session (default/custom title, events, persistence), get session, list sessions (empty, multiple, sorting), add messages (user/assistant, events, persistence), getMessages (empty, multiple, sorting), updateTitle, remove (with messages), full conversation flow
 ---
+
+## 2026-01-14 - P6-005
+- What was implemented: Created comprehensive E2E tests for the complete chat flow
+- Files changed: test/e2e/chat-flow.test.ts (new)
+- **Learnings for future iterations:**
+  - E2E tests go in test/e2e/ directory, distinct from integration tests
+  - Mock the Provider and streamText from 'ai' package to test ChatLoop without real API calls
+  - Use vi.mock() at the module level, then import the mocked modules to use vi.mocked()
+  - Helper functions createMockTextResponse() and createMockToolCallResponse() simplify test setup
+  - For tool call responses, simulate by incrementing callCount and returning different responses
+  - textStream is an async generator that yields chunks; response contains the final messages array
+  - Tool call messages have content as array with type "tool-call" objects
+  - ToolRegistry.clear() and ToolRegistry.register() allow controlling which tools are available in tests
+  - Track callbacks (onTextChunk, onToolStart, onToolComplete, onToolError) via arrays or vi.fn()
+  - Test abort behavior by calling abortController.abort() before running ChatLoop.run()
+  - 12 tests cover: text responses, streaming chunks, abort handling, response saving, tool execution, tool errors, bus events, maxIterations, session persistence, loading existing sessions, disk persistence, session isolation
+---
