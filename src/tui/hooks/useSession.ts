@@ -95,6 +95,29 @@ export function useSession(existingSessionId?: string) {
   }, [existingSessionId])
 
   /**
+   * Refresh messages from storage.
+   * Useful after external changes (like ChatLoop saving assistant messages).
+   */
+  const refreshMessages = useCallback(async () => {
+    if (!session) return
+
+    try {
+      const msgIds = await Storage.list(["sessions", session.id, "messages"])
+      const loadedMessages = await Promise.all(
+        msgIds.map((id) =>
+          Storage.read<Message>(["sessions", session.id, "messages", id])
+        )
+      )
+      const validMessages = loadedMessages
+        .filter((msg): msg is Message => msg !== undefined)
+        .sort((a, b) => a.timestamp - b.timestamp)
+      setMessages(validMessages)
+    } catch (err) {
+      Log.formatAndLogError("Failed to refresh messages", err)
+    }
+  }, [session])
+
+  /**
    * Add a message to the session.
    * Saves to storage and updates state.
    * Publishes session.message event.
@@ -149,6 +172,7 @@ export function useSession(existingSessionId?: string) {
     session,
     messages,
     addMessage,
+    refreshMessages,
     error,
   }
 }

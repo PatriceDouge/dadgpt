@@ -31,7 +31,7 @@ export function App({
   const initialMessageSent = useRef(false)
 
   // Use hooks for session management and chat
-  const { session, messages, addMessage } = useSession(sessionId)
+  const { session, messages, addMessage, refreshMessages } = useSession(sessionId)
 
   const { isLoading, streamingContent, sendMessage } = useChat(session?.id)
 
@@ -53,27 +53,22 @@ export function App({
 
   /**
    * Handle message submission from input box.
-   * Adds user message to session, sends to AI, and adds assistant reply.
+   * Adds user message to session, sends to AI via ChatLoop which handles tools.
    */
   const handleSubmit = async (content: string): Promise<void> => {
     if (!session) return
 
-    // Add user message
+    // Add user message to local state and storage
     await addMessage({
       role: "user",
       content,
     })
 
-    // Send to AI and get response
-    const reply = await sendMessage(content)
+    // Send to AI via ChatLoop (handles tools, saves assistant reply to storage)
+    await sendMessage(content)
 
-    // Add assistant reply to session if we got one
-    if (reply) {
-      await addMessage({
-        role: "assistant",
-        content: reply,
-      })
-    }
+    // Refresh messages from storage to get the assistant's reply
+    await refreshMessages()
   }
 
   // Show loading state while config is loading

@@ -1,21 +1,29 @@
 import { useState, useCallback, useRef, useEffect } from "react"
-import { streamText, type CoreMessage } from "ai"
-import { Config } from "../../config/config"
-import { Storage } from "../../storage/storage"
+import { ChatLoop, type ChatLoopResult } from "../../session/loop"
 import { Log } from "../../util/log"
 import { ProviderError } from "../../util/errors"
-import { Provider } from "../../provider/provider"
-import type { Message } from "./useSession"
+
+/**
+ * Tool call info for display in the UI
+ */
+export interface ToolCallInfo {
+  toolId: string
+  status: "running" | "completed" | "error"
+  input?: unknown
+  output?: string
+  error?: string
+}
 
 /**
  * Hook for AI chat interactions.
- * Handles sending messages to the LLM and streaming responses.
+ * Uses ChatLoop for full tool support and streaming responses.
  * Supports abort/cancellation via AbortController.
  */
 export function useChat(sessionId?: string) {
   const [isLoading, setIsLoading] = useState(false)
   const [streamingContent, setStreamingContent] = useState("")
   const [error, setError] = useState<Error | null>(null)
+  const [activeToolCalls, setActiveToolCalls] = useState<ToolCallInfo[]>([])
   const abortControllerRef = useRef<AbortController | null>(null)
 
   // Cleanup abort controller on unmount
@@ -34,16 +42,17 @@ export function useChat(sessionId?: string) {
       abortControllerRef.current = null
       setIsLoading(false)
       setStreamingContent("")
+      setActiveToolCalls([])
     }
   }, [])
 
   /**
    * Send a message to the AI and stream the response.
-   * Loads config, gets model, streams response.
-   * Returns the final content so the caller can save it to the session.
+   * Uses ChatLoop which handles tools, system prompts, and multi-turn tool execution.
+   * Returns the result which includes content and tool calls made.
    */
   const sendMessage = useCallback(
-    async (_content: string): Promise<string | null> => {
+    async (_content: string): Promise<ChatLoopResult | null> => {
       if (!sessionId) return null
 
       // Cancel any existing request
@@ -54,58 +63,49 @@ export function useChat(sessionId?: string) {
       setIsLoading(true)
       setStreamingContent("")
       setError(null)
+      setActiveToolCalls([])
 
       try {
-        const config = await Config.get()
-        const model = await Provider.getModel(config.defaultProvider, config.defaultModel)
-
-        // Load conversation history
-        const msgIds = await Storage.list(["sessions", sessionId, "messages"])
-        const loadedMessages = await Promise.all(
-          msgIds.map((id) =>
-            Storage.read<Message>(["sessions", sessionId, "messages", id])
-          )
-        )
-
-        // Sort by timestamp and convert to AI SDK format
-        const history: CoreMessage[] = loadedMessages
-          .filter((msg): msg is Message => msg !== undefined)
-          .sort((a, b) => a.timestamp - b.timestamp)
-          .map((msg) => ({
-            role: msg.role,
-            content: msg.content,
-          }))
-
-        // Stream the response with abort signal
-        const result = streamText({
-          model,
-          messages: history,
-          abortSignal: signal,
+        // Use ChatLoop.run() which handles tools, system prompts, and everything
+        const result = await ChatLoop.run(sessionId, signal, {
+          onTextChunk: (chunk) => {
+            setStreamingContent((prev) => prev + chunk)
+          },
+          onToolStart: (toolId, input) => {
+            setActiveToolCalls((prev) => [
+              ...prev,
+              { toolId, status: "running", input },
+            ])
+          },
+          onToolComplete: (toolId, output) => {
+            setActiveToolCalls((prev) =>
+              prev.map((tc) =>
+                tc.toolId === toolId && tc.status === "running"
+                  ? { ...tc, status: "completed", output }
+                  : tc
+              )
+            )
+          },
+          onToolError: (toolId, error) => {
+            setActiveToolCalls((prev) =>
+              prev.map((tc) =>
+                tc.toolId === toolId && tc.status === "running"
+                  ? { ...tc, status: "error", error }
+                  : tc
+              )
+            )
+          },
         })
 
-        let fullContent = ""
+        // Clear streaming content when done - ChatLoop saves the message
+        setStreamingContent("")
 
-        // Update streaming content as chunks arrive
-        for await (const chunk of result.textStream) {
-          // Check for abort between chunks
-          if (signal.aborted) {
-            Log.debug("AI request cancelled")
-            return null
-          }
-          fullContent += chunk
-          setStreamingContent(fullContent)
-        }
-
-        // Don't return content if the request was aborted
-        if (signal.aborted) {
+        if (result.aborted) {
+          Log.debug("AI request cancelled")
           return null
         }
 
-        // Clear streaming content - caller will add to messages
-        setStreamingContent("")
-
-        // Return the full content for the caller to save
-        return fullContent
+        return result
       } catch (err) {
         // Don't report abort errors as actual errors
         if (err instanceof Error && err.name === "AbortError") {
@@ -114,9 +114,9 @@ export function useChat(sessionId?: string) {
         }
 
         // Classify and handle different error types
-        const error = classifyError(err)
+        const classifiedError = classifyError(err)
         Log.formatAndLogError("AI request failed", err)
-        setError(error)
+        setError(classifiedError)
         return null
       } finally {
         setIsLoading(false)
@@ -130,6 +130,7 @@ export function useChat(sessionId?: string) {
     isLoading,
     streamingContent,
     error,
+    activeToolCalls,
     sendMessage,
     cancel,
   }

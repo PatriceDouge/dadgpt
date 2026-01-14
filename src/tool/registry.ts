@@ -2,9 +2,15 @@ import type { z } from "zod"
 import type { Tool, ToolContext, ToolResult } from "./types"
 
 /**
+ * Any tool type - used for registry which stores tools with various parameter types
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type AnyTool = Tool<any>
+
+/**
  * Map of registered tools by ID
  */
-const tools = new Map<string, Tool>()
+const tools = new Map<string, AnyTool>()
 
 /**
  * AI SDK compatible tool format
@@ -27,7 +33,7 @@ export namespace ToolRegistry {
    * Register a tool with the registry.
    * @param tool - The tool to register
    */
-  export function register(tool: Tool): void {
+  export function register(tool: AnyTool): void {
     tools.set(tool.id, tool)
   }
 
@@ -36,7 +42,7 @@ export namespace ToolRegistry {
    * @param id - The tool ID to look up
    * @returns The tool if found, undefined otherwise
    */
-  export function get(id: string): Tool | undefined {
+  export function get(id: string): AnyTool | undefined {
     return tools.get(id)
   }
 
@@ -44,7 +50,7 @@ export namespace ToolRegistry {
    * Get all registered tools.
    * @returns Array of all registered tools
    */
-  export function getAll(): Tool[] {
+  export function getAll(): AnyTool[] {
     return Array.from(tools.values())
   }
 
