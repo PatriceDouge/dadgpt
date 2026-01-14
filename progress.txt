@@ -9,6 +9,8 @@
 - Storage files go in ~/.dadgpt/data/
 - All IDs are ULIDs for sortability
 - Use namespace pattern for utility modules (Log, Storage, Bus, etc.)
+- Sessions use directory storage: sessions/{id}/session.json + sessions/{id}/messages/{msgId}.json
+- Use Storage.listDirs() for directory-based storage patterns, Storage.list() for flat .json file listings
 
 ---
 
@@ -735,4 +737,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Test precedence chain: defaults < global config < project config < env vars
   - Process.chdir() allows testing project-level config by changing to a temp project directory
   - 15 tests cover: default config, global config merge, env var overrides, empty/invalid JSON handling, deep merge, caching, invalidate, save, precedence chain
+---
+
+## 2026-01-14 - P6-004
+- What was implemented: Created comprehensive integration tests for Session management
+- Files changed: test/integration/session.test.ts (new), src/storage/storage.ts (added listDirs), src/session/session.ts (fixed list to use listDirs)
+- **Learnings for future iterations:**
+  - Sessions use directory-based storage pattern: sessions/{id}/session.json with sessions/{id}/messages/{msgId}.json
+  - Storage.list() only returns .json files, use Storage.listDirs() for subdirectory-based storage
+  - Added Storage.listDirs() method that uses fs.readdir with { withFileTypes: true } to filter directories
+  - Session.list() must use listDirs() since sessions are stored in subdirectories, not as direct .json files
+  - Integration tests follow same patterns as CLI tests: unique temp dirs, env var overrides, Bus.clear() in beforeEach
+  - 24 tests cover: create session (default/custom title, events, persistence), get session, list sessions (empty, multiple, sorting), add messages (user/assistant, events, persistence), getMessages (empty, multiple, sorting), updateTitle, remove (with messages), full conversation flow
 ---
