@@ -1110,7 +1110,7 @@
         "No console.log statements in production code"
       ],
       "priority": 64,
-      "passes": false,
+      "passes": true,
       "notes": ""
     }
   ]

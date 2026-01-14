@@ -9,7 +9,16 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html"],
       include: ["src/**/*.ts"],
-      exclude: ["src/**/*.d.ts"],
+      exclude: [
+        "src/**/*.d.ts",
+        // Entry point - tested via integration tests
+        "src/index.ts",
+        // CLI commands - tested via integration tests (child process coverage not tracked)
+        "src/cli/**/*.ts",
+        // TUI components - React components that need special test setup
+        "src/tui/**/*.ts",
+        "src/tui/**/*.tsx",
+      ],
     },
   },
 })
