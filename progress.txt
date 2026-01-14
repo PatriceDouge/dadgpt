@@ -616,3 +616,17 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Clean up temp dirs in afterEach with `fs.rm(dir, { recursive: true, force: true })`
   - Tests cover: init command (file creation, existing file warning, --force, templates), goals command (empty state, JSON output, filtering), todos command (empty state, JSON output, filtering), help command
 ---
+
+## 2026-01-14 - P5-008
+- What was implemented: Created Agent System with main DadGPT agent definition
+- Files changed: src/agent/agent.ts (new), src/agent/prompts.ts (new), src/agent/dad.ts (new)
+- **Learnings for future iterations:**
+  - Agent files go in src/agent/ directory
+  - Agent interface defines: id, name, description, systemPrompt, toolIds
+  - Agents namespace provides register(), get(), getAll(), getTools(), clear() methods
+  - DadAgent has full tool access via toolIds: ["goal", "todo", "project", "family", "read", "write"]
+  - System prompt in prompts.ts describes agent role, capabilities, communication style, and guidelines
+  - AgentRunConfig includes model, sessionId, and abortSignal for running agents
+  - AgentResult tracks content, toolCalls, and optional usage statistics
+  - DadAgent auto-registers via import side effect in dad.ts
+---
