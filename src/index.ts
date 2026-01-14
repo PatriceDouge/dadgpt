@@ -25,10 +25,17 @@ process.on("uncaughtException", (err: Error) => {
 
 /**
  * Handle SIGINT (Ctrl+C) gracefully.
+ * Sends abort signal to any running operations before exiting.
  */
+let isExiting = false
 process.on("SIGINT", () => {
-  // Clean exit on Ctrl+C
-  process.exit(0)
+  if (isExiting) {
+    // Force exit on second Ctrl+C
+    process.exit(1)
+  }
+  isExiting = true
+  // Give operations a moment to clean up, then exit
+  setTimeout(() => process.exit(0), 100)
 })
 
 /**

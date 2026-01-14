@@ -4,6 +4,9 @@ import { createId } from "../../util/id"
 import { Bus } from "../../bus/bus"
 import { Log } from "../../util/log"
 
+/** Maximum message content length (100KB) - prevents memory issues with extremely long messages */
+const MAX_MESSAGE_LENGTH = 100 * 1024
+
 /**
  * Message interface for chat messages
  */
@@ -95,6 +98,7 @@ export function useSession(existingSessionId?: string) {
    * Add a message to the session.
    * Saves to storage and updates state.
    * Publishes session.message event.
+   * Truncates very long messages to prevent memory issues.
    */
   const addMessage = useCallback(
     async (
@@ -102,8 +106,18 @@ export function useSession(existingSessionId?: string) {
     ): Promise<Message | null> => {
       if (!session) return null
 
+      // Truncate very long messages to prevent memory issues
+      let content = msg.content
+      if (content.length > MAX_MESSAGE_LENGTH) {
+        Log.warn(
+          `Message content truncated from ${content.length} to ${MAX_MESSAGE_LENGTH} characters`
+        )
+        content = content.slice(0, MAX_MESSAGE_LENGTH) + "\n\n[Message truncated due to length]"
+      }
+
       const message: Message = {
         ...msg,
+        content,
         id: createId(),
         timestamp: Date.now(),
       }

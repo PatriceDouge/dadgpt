@@ -2,6 +2,7 @@ import * as fs from "node:fs/promises"
 import * as path from "node:path"
 import * as os from "node:os"
 import { getDataPath } from "./paths"
+import { Log } from "../util/log"
 
 /**
  * Get the data directory, supporting DADGPT_DATA_DIR override for testing.
@@ -21,15 +22,33 @@ function getDataDir(): string {
 export namespace Storage {
   /**
    * Read and parse JSON data from storage.
+   * Handles invalid JSON gracefully by returning undefined and logging a warning.
    * @param key - Path segments relative to data directory
-   * @returns Parsed data or undefined if not found
+   * @returns Parsed data or undefined if not found or invalid JSON
    */
   export async function read<T>(key: string[]): Promise<T | undefined> {
     const filePath = getDataPath(...key)
     try {
       const content = await fs.readFile(filePath, "utf-8")
-      return JSON.parse(content) as T
+
+      // Handle empty file gracefully
+      const trimmed = content.trim()
+      if (!trimmed) {
+        Log.debug(`Storage file is empty: ${filePath}`)
+        return undefined
+      }
+
+      try {
+        return JSON.parse(trimmed) as T
+      } catch (parseErr) {
+        // Invalid JSON - log warning and return undefined
+        Log.warn(
+          `Invalid JSON in storage file ${filePath}: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}`
+        )
+        return undefined
+      }
     } catch {
+      // File doesn't exist or can't be read
       return undefined
     }
   }

@@ -93,26 +93,62 @@ export namespace Config {
 }
 
 /**
- * Load global config from ~/.dadgpt/config.json
+ * Load global config from ~/.dadgpt/config.json.
+ * Handles missing files, empty files, and invalid JSON gracefully.
  */
 async function loadGlobalConfig(): Promise<Partial<ConfigType>> {
   try {
     const configPath = getConfigPath()
     const content = await fs.readFile(configPath, "utf-8")
-    return JSON.parse(content) as Partial<ConfigType>
+
+    // Handle empty file gracefully
+    const trimmed = content.trim()
+    if (!trimmed) {
+      Log.debug("Global config file is empty, using defaults")
+      return {}
+    }
+
+    try {
+      return JSON.parse(trimmed) as Partial<ConfigType>
+    } catch (parseErr) {
+      // Invalid JSON - log warning and use defaults
+      Log.warn(
+        `Invalid JSON in config file ${configPath}, using defaults: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}`
+      )
+      return {}
+    }
   } catch {
+    // File doesn't exist or can't be read - this is fine, use defaults
     return {}
   }
 }
 
 /**
- * Load project-level config from ./dadgpt.config.json
+ * Load project-level config from ./dadgpt.config.json.
+ * Handles missing files, empty files, and invalid JSON gracefully.
  */
 async function loadProjectConfig(): Promise<Partial<ConfigType>> {
   try {
     const content = await fs.readFile(PROJECT_CONFIG, "utf-8")
-    return JSON.parse(content) as Partial<ConfigType>
+
+    // Handle empty file gracefully
+    const trimmed = content.trim()
+    if (!trimmed) {
+      Log.debug("Project config file is empty, using defaults")
+      return {}
+    }
+
+    try {
+      return JSON.parse(trimmed) as Partial<ConfigType>
+    } catch (parseErr) {
+      // Invalid JSON - log warning and use defaults
+      Log.warn(
+        `Invalid JSON in project config ${PROJECT_CONFIG}, using defaults: ${parseErr instanceof Error ? parseErr.message : String(parseErr)}`
+      )
+      return {}
+    }
   } catch {
+    // File doesn't exist or can't be read - this is fine, use defaults
     return {}
   }
 }

@@ -15,6 +15,7 @@ import { initCommand } from "./commands/init"
 import { authCommand } from "./commands/auth"
 import { goalsCommand } from "./commands/goals"
 import { todosCommand } from "./commands/todos"
+import { Storage } from "../storage/storage"
 
 /**
  * Global CLI options available to all commands.
@@ -58,12 +59,22 @@ export function buildCli() {
         global: true,
       })
 
-      // Middleware to initialize logging
-      .middleware((argv) => {
+      // Middleware to initialize logging and ensure data directory exists
+      .middleware(async (argv) => {
         const level: LogLevel = argv.debug ? "DEBUG" : "INFO"
         Log.init({ level })
         Log.debug("Debug logging enabled")
         Log.debug("CLI args:", argv)
+
+        // Ensure the ~/.dadgpt/data directory exists on startup
+        // This prevents errors when the directory doesn't exist yet
+        try {
+          await Storage.ensureDir()
+        } catch (err) {
+          Log.debug("Failed to ensure data directory:", err)
+          // Non-fatal: continue even if we can't create the directory
+          // Commands that need it will fail with a more specific error
+        }
       })
 
       // Help configuration
