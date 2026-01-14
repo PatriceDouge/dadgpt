@@ -149,3 +149,13 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Default values in schemas using .default() method
   - Export both schemas and inferred types for maximum flexibility
 ---
+
+## 2026-01-13 - P2-002
+- What was implemented: Created default configuration values for DadGPT
+- Files changed: src/config/defaults.ts (new)
+- **Learnings for future iterations:**
+  - Import types with `import type` for type-only imports
+  - DEFAULT_CONFIG is typed as Config from schema.ts for type safety
+  - Default permissions: allow read-only tools (read, goal, todo, project, family), ask for write/bash
+  - goalCategories default to Health, Family, Work, Personal, Finance
+---
