@@ -265,3 +265,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - focus prop on TextInput controls whether it accepts keyboard input
   - When disabled, change placeholder text to indicate waiting state
 ---
+
+## 2026-01-13 - P3-004
+- What was implemented: Created MessageBubble component for chat messages
+- Files changed: src/tui/components/MessageBubble.tsx (new)
+- **Learnings for future iterations:**
+  - MessageBubble props: role ('user' | 'assistant'), content, timestamp (optional)
+  - User messages show "You" in blueBright, assistant shows "DadGPT" in gray
+  - Use dimColor prop on Text for dim gray timestamp styling
+  - wrap="wrap" on Text ensures content wraps properly in terminal
+  - toLocaleTimeString with options {hour: "2-digit", minute: "2-digit"} for clean time formatting
+---
