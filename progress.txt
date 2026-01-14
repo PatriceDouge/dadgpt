@@ -410,3 +410,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Auto-registration of default tools deferred until tool implementations exist (P4-005+)
   - Added has() and clear() utility methods for checking tool existence and testing
 ---
+
+## 2026-01-13 - P4-005
+- What was implemented: Created Goal Tool with full CRUD operations and state machine integration
+- Files changed: src/tool/goal.ts (new)
+- **Learnings for future iterations:**
+  - Tools follow Tool<TParams> interface from src/tool/types.ts
+  - Store goals with StoredGoal interface that extends GoalContext with state field
+  - Use createTimestampedId(prefix) for readable IDs like "goal_01HXYZ..."
+  - Goals are stored at ["goals", id] path in storage
+  - XState createActor with goalMachine.resolveState() to resume from stored state
+  - Bus.publish for goal.created, goal.updated, goal.completed, goal.deleted events
+  - Action parameter is an enum allowing list, create, get, update, transition, delete
+  - Transition action handles state machine events including COMPLETE_MILESTONE with milestoneId
+  - Check for final states (completed/abandoned) before attempting transitions
+---
