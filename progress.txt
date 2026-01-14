@@ -495,3 +495,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - List output includes budget when present and milestone progress (e.g., "0/2 milestones")
   - Use vi.fn() to spy on Bus events for project.created, project.updated, project.completed, project.deleted
 ---
+
+## 2026-01-13 - P4-011
+- What was implemented: Created Family Tool with info management for family members
+- Files changed: src/tool/family.ts (new), src/bus/bus.ts (updated with family events)
+- **Learnings for future iterations:**
+  - Family Tool differs from Goal/Todo/Project tools - stores data in config.family array, not in separate storage files
+  - Uses Config.save({ family: updatedFamily }) to persist changes to ~/.dadgpt/config.json
+  - Birthday parsing supports both MM-DD and YYYY-MM-DD formats using parseBirthday() helper
+  - daysUntil() calculates days until next occurrence of a birthday (handles year wrap-around)
+  - upcoming action returns birthdays within N days (defaults to 30), sorted by proximity
+  - Bus events: family.added, family.updated, family.removed (different naming convention than other tools)
+  - FamilyMember type imported from src/config/schema.ts (already defined in P2-001)
+---
