@@ -483,3 +483,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - COMPLETE_MILESTONE only works from active state
   - Bus events added: project.created, project.updated, project.completed, project.deleted
 ---
+
+## 2026-01-13 - P4-010
+- What was implemented: Created comprehensive unit tests for the Project Tool
+- Files changed: test/unit/tool/project.test.ts (new)
+- **Learnings for future iterations:**
+  - Project Tool tests follow same patterns as Goal and Todo tool tests (mock context, temp dir, Bus.clear())
+  - 35 tests cover: create (required/all fields), list (filters: status; shows budget and milestone progress), get (with/without milestones), addMilestone (with/without due date, error cases), transition (through states, COMPLETE_MILESTONE, invalid transitions), update (fields, events), delete
+  - addMilestone returns milestoneId in metadata for subsequent COMPLETE_MILESTONE operations
+  - Cannot add milestone or transition from final states (completed/cancelled)
+  - List output includes budget when present and milestone progress (e.g., "0/2 milestones")
+  - Use vi.fn() to spy on Bus events for project.created, project.updated, project.completed, project.deleted
+---
