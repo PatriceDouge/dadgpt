@@ -8,6 +8,7 @@
 - Use tsx for TypeScript execution
 - Storage files go in ~/.dadgpt/data/
 - All IDs are ULIDs for sortability
+- Use namespace pattern for utility modules (Log, Storage, Bus, etc.)
 
 ---
 
@@ -58,4 +59,36 @@
   - ESLint 9 requires flat config file (eslint.config.js) with @eslint/js and typescript-eslint packages
   - ulid package provides ULID generation - IDs are lexicographically sortable by timestamp
   - Utility modules go in src/util/ directory
+---
+
+## 2026-01-13 - P1-006
+- What was implemented: Created logging utility with configurable log levels
+- Files changed: src/util/log.ts (new), eslint.config.js (updated)
+- **Learnings for future iterations:**
+  - PRD requires namespace pattern for Log utility - disabled @typescript-eslint/no-namespace rule
+  - Log levels follow hierarchy: DEBUG > INFO > WARN > ERROR (debug is most verbose)
+  - warn() and error() always log regardless of configured level
+---
+
+## 2026-01-13 - P1-007
+- What was implemented: Created custom error types for better error handling
+- Files changed: src/util/errors.ts (new)
+- **Learnings for future iterations:**
+  - Error classes extend base DadGPTError which extends Error
+  - Each error type has a `code` property for programmatic error identification
+  - Use Error.captureStackTrace when available to maintain proper stack traces
+  - Error types: ConfigError, StorageError, ProviderError, ToolError
+---
+
+## 2026-01-13 - P1-008
+Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
+- What was implemented: Created storage path utilities module
+- Files changed: src/storage/paths.ts (new)
+- **Learnings for future iterations:**
+  - Use node:path and node:os imports (with node: prefix for clarity)
+  - DADGPT_DATA_DIR env var allows overriding data directory for testing
+  - DADGPT_HOME env var allows overriding home directory
+  - Path constants are computed via functions to support env override
+  - getDataPath() auto-appends .json extension
+  - Storage layer lives in src/storage/ directory
 ---
