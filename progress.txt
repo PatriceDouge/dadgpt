@@ -767,3 +767,19 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Test abort behavior by calling abortController.abort() before running ChatLoop.run()
   - 12 tests cover: text responses, streaming chunks, abort handling, response saving, tool execution, tool errors, bus events, maxIterations, session persistence, loading existing sessions, disk persistence, session isolation
 ---
+
+## 2026-01-14 - P6-006
+- What was implemented: Permission system for controlling AI tool access
+- Files changed:
+  - src/permission/permission.ts (new) - Permission namespace with check(), isAllowed(), isDenied(), requiresPermission()
+  - src/permission/rules.ts (new) - Pattern matching utilities and evaluateRules()
+  - src/session/session.ts (fixed) - Added ULID as secondary sort key for stable message ordering
+- **Learnings for future iterations:**
+  - Permission files go in src/permission/ directory
+  - Permission.check(tool, resource, ruleset) returns "allow" | "deny" | "ask"
+  - Priority order: deny > allow > ask (deny takes highest precedence)
+  - Pattern matching supports: exact match ("goal"), wildcard ("*"), prefix wildcard ("file.*")
+  - evaluateRules() is synchronous, Permission.check() is async (loads config if no ruleset provided)
+  - Default rules from config: allow (read, goal, todo, project, family), ask (write, bash)
+  - When sorting by timestamp, add secondary sort key (ULID) for stable ordering when timestamps are equal
+---
