@@ -350,3 +350,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Escape check: key.escape (boolean property on key object)
   - Ink's useApp() provides the exit() function to cleanly exit the application
 ---
+
+## 2026-01-13 - P3-011
+- What was implemented: Created main App component that composes all TUI elements
+- Files changed: src/tui/App.tsx (new)
+- **Learnings for future iterations:**
+  - App component is the main composition point for Header, ChatView, and InputBox
+  - Uses useRef to track if initialMessage has been sent (prevents double-sending)
+  - Import Config type explicitly: `import { Config, type Config as ConfigType }`
+  - Combine stored messages with streamingContent for displayMessages array
+  - Use flexDirection="column" and height="100%" for full-height layout
+  - overflow="hidden" on the chat container to handle scrolling properly
+  - Disable input (disabled prop) while isLoading to prevent user input during AI response
+---
