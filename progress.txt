@@ -573,3 +573,17 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - PROVIDERS constant stores metadata: provider name and corresponding env var name
   - Always close readline interface in finally block to avoid hanging
 ---
+
+## 2026-01-14 - P5-005
+- What was implemented: Created CLI goals command for listing goals from the command line
+- Files changed: src/cli/commands/goals.ts (new), src/cli/index.ts (updated)
+- **Learnings for future iterations:**
+  - Goals command follows same CommandModule pattern as other CLI commands
+  - Goals are read directly from storage using Storage.list() and Storage.read()
+  - StoredGoal interface matches the one in src/tool/goal.ts (includes state field)
+  - Status icons: ○ (not_started), ◐ (in_progress), ⏸ (paused), ● (completed), ✗ (abandoned)
+  - ANSI escape codes for colors: \x1b[90m (gray), \x1b[34m (blue), \x1b[33m (yellow), \x1b[32m (green), \x1b[31m (red), \x1b[0m (reset)
+  - Goals are grouped by category and sorted: active goals first, then by progress descending
+  - createProgressBar() uses █ and ░ unicode characters for visual progress bar
+  - formatDueDate() calculates days until/overdue and applies appropriate color
+---
