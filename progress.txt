@@ -703,3 +703,23 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Handle SIGINT and SIGTERM for clean exits (especially important for CLI apps)
   - In JSON output mode, output empty array on error to maintain parseable output
 ---
+
+## 2026-01-14 - P6-002
+- What was implemented: Comprehensive edge case handling across the codebase
+- Files changed:
+  - src/config/config.ts - Handle empty and invalid JSON in global/project config files
+  - src/storage/storage.ts - Handle empty and invalid JSON in storage reads
+  - src/cli/index.ts - Auto-create ~/.dadgpt/data directory on startup via Storage.ensureDir()
+  - src/tui/hooks/useChat.ts - Add network error classification, abort signal support, cancel function
+  - src/tui/hooks/useSession.ts - Add message length truncation (100KB max)
+  - src/index.ts - Improve Ctrl+C handling with double-press force exit
+  - prd.json - Mark P6-002 as passes: true
+- **Learnings for future iterations:**
+  - Use separate try-catch for JSON.parse to distinguish between file access errors and parse errors
+  - Always trim() content before checking for empty strings (handles whitespace-only files)
+  - AbortController pattern: create in sendMessage, store in useRef, abort on unmount/cancel
+  - Error classification function checks error.message.toLowerCase() for keywords
+  - Double Ctrl+C pattern: use isExiting flag, force exit(1) on second press
+  - Message truncation adds "[Message truncated due to length]" suffix for user visibility
+  - Log.warn() for non-fatal issues (invalid JSON), Log.debug() for expected conditions (empty files)
+---
