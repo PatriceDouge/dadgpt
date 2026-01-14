@@ -207,3 +207,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - DEFER event stores the until date in dueDate field
   - Can COMPLETE directly from pending state (useful for quick tasks)
 ---
+
+## 2026-01-13 - P2-007
+- What was implemented: Created comprehensive unit tests for the todo state machine
+- Files changed: test/unit/state/todo.machine.test.ts (new)
+- **Learnings for future iterations:**
+  - Todo machine tests follow same patterns as goal machine tests
+  - Use todoMachine.resolveState() to create a snapshot with custom context for testing specific states
+  - Todo done/cancelled states are NOT final (status remains "active") unlike goal's completed/abandoned states
+  - 21 tests cover all state transitions, BLOCK/UNBLOCK, DEFER, REOPEN, and context validation
+  - Test that events only work from appropriate states (e.g., BLOCK only from in_progress)
+---
