@@ -311,3 +311,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Truncate helper function keeps UI clean: input truncated to 60 chars, output to 100 chars
   - Only show output when status === "completed", only show error when status === "error"
 ---
+
+## 2026-01-13 - P3-008
+- What was implemented: Created useSession hook for managing chat sessions in TUI
+- Files changed: src/tui/hooks/useSession.ts (new)
+- **Learnings for future iterations:**
+  - React hooks go in src/tui/hooks/ directory
+  - useSession hook manages session state and message persistence
+  - Export Message and Session interfaces for use by other components
+  - Messages are sorted by timestamp when loading from storage
+  - useCallback is used for addMessage to maintain referential stability
+  - Bus.publish is used to notify other parts of the app about session events
+  - Storage paths follow pattern: ["sessions", sessionId, "session"] and ["sessions", sessionId, "messages", messageId]
+---
