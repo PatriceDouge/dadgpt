@@ -3,6 +3,8 @@ import * as path from "node:path"
 import * as os from "node:os"
 import { ConfigSchema, type Config as ConfigType } from "./schema"
 import { DEFAULT_CONFIG } from "./defaults"
+import { Log } from "../util/log"
+import { ConfigError } from "../util/errors"
 
 export type { ConfigType as Config }
 
@@ -67,16 +69,26 @@ export namespace Config {
   /**
    * Save configuration to the global config file (~/.dadgpt/config.json).
    * Merges with existing global config.
+   * @throws ConfigError if configuration cannot be saved
    */
   export async function save(config: Partial<ConfigType>): Promise<void> {
     const configPath = getConfigPath()
-    const currentGlobal = await loadGlobalConfig()
-    const updated = deepMerge(currentGlobal, config)
 
-    // Ensure directory exists
-    await fs.mkdir(path.dirname(configPath), { recursive: true })
-    await fs.writeFile(configPath, JSON.stringify(updated, null, 2), "utf-8")
-    invalidate()
+    try {
+      const currentGlobal = await loadGlobalConfig()
+      const updated = deepMerge(currentGlobal, config)
+
+      // Ensure directory exists
+      await fs.mkdir(path.dirname(configPath), { recursive: true })
+      await fs.writeFile(configPath, JSON.stringify(updated, null, 2), "utf-8")
+      invalidate()
+    } catch (err) {
+      Log.formatAndLogError("Failed to save configuration", err)
+      throw new ConfigError(
+        `Failed to save configuration to ${configPath}: ${err instanceof Error ? err.message : String(err)}`,
+        "CONFIG_SAVE_ERROR"
+      )
+    }
   }
 }
 

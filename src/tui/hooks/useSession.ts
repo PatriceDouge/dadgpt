@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react"
 import { Storage } from "../../storage/storage"
 import { createId } from "../../util/id"
 import { Bus } from "../../bus/bus"
+import { Log } from "../../util/log"
 
 /**
  * Message interface for chat messages
@@ -31,54 +32,60 @@ export interface Session {
 export function useSession(existingSessionId?: string) {
   const [session, setSession] = useState<Session | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
+  const [error, setError] = useState<Error | null>(null)
 
   // Initialize or load session
   useEffect(() => {
     async function init() {
-      if (existingSessionId) {
-        // Load existing session
-        const loaded = await Storage.read<Session>([
-          "sessions",
-          existingSessionId,
-          "session",
-        ])
-        if (loaded) {
-          setSession(loaded)
-          // Load messages
-          const msgIds = await Storage.list([
+      try {
+        if (existingSessionId) {
+          // Load existing session
+          const loaded = await Storage.read<Session>([
             "sessions",
             existingSessionId,
-            "messages",
+            "session",
           ])
-          const loadedMessages = await Promise.all(
-            msgIds.map((id) =>
-              Storage.read<Message>([
-                "sessions",
-                existingSessionId,
-                "messages",
-                id,
-              ])
+          if (loaded) {
+            setSession(loaded)
+            // Load messages
+            const msgIds = await Storage.list([
+              "sessions",
+              existingSessionId,
+              "messages",
+            ])
+            const loadedMessages = await Promise.all(
+              msgIds.map((id) =>
+                Storage.read<Message>([
+                  "sessions",
+                  existingSessionId,
+                  "messages",
+                  id,
+                ])
+              )
             )
-          )
-          // Filter out undefined and sort by timestamp
-          const validMessages = loadedMessages
-            .filter((msg): msg is Message => msg !== undefined)
-            .sort((a, b) => a.timestamp - b.timestamp)
-          setMessages(validMessages)
-          return
+            // Filter out undefined and sort by timestamp
+            const validMessages = loadedMessages
+              .filter((msg): msg is Message => msg !== undefined)
+              .sort((a, b) => a.timestamp - b.timestamp)
+            setMessages(validMessages)
+            return
+          }
         }
-      }
 
-      // Create new session
-      const newSession: Session = {
-        id: createId(),
-        title: "New Chat",
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
+        // Create new session
+        const newSession: Session = {
+          id: createId(),
+          title: "New Chat",
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        }
+        await Storage.write(["sessions", newSession.id, "session"], newSession)
+        setSession(newSession)
+        Bus.publish("session.created", { sessionId: newSession.id })
+      } catch (err) {
+        Log.formatAndLogError("Failed to initialize session", err)
+        setError(err instanceof Error ? err : new Error(String(err)))
       }
-      await Storage.write(["sessions", newSession.id, "session"], newSession)
-      setSession(newSession)
-      Bus.publish("session.created", { sessionId: newSession.id })
     }
 
     init()
@@ -101,18 +108,25 @@ export function useSession(existingSessionId?: string) {
         timestamp: Date.now(),
       }
 
-      await Storage.write(
-        ["sessions", session.id, "messages", message.id],
-        message
-      )
+      try {
+        await Storage.write(
+          ["sessions", session.id, "messages", message.id],
+          message
+        )
 
-      setMessages((prev) => [...prev, message])
-      Bus.publish("session.message", {
-        sessionId: session.id,
-        messageId: message.id,
-      })
+        setMessages((prev) => [...prev, message])
+        Bus.publish("session.message", {
+          sessionId: session.id,
+          messageId: message.id,
+        })
 
-      return message
+        return message
+      } catch (err) {
+        Log.formatAndLogError("Failed to save message", err)
+        // Still update local state so user sees the message
+        setMessages((prev) => [...prev, message])
+        return message
+      }
     },
     [session]
   )
@@ -121,5 +135,6 @@ export function useSession(existingSessionId?: string) {
     session,
     messages,
     addMessage,
+    error,
   }
 }

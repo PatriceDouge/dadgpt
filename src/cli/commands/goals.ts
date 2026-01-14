@@ -9,6 +9,7 @@ import type { CommandModule } from "yargs"
 import { Storage } from "../../storage/storage"
 import type { GlobalOptions } from "../index"
 import type { GoalState } from "../../state/goal.machine"
+import { Log } from "../../util/log"
 
 /**
  * Options specific to the goals command.
@@ -202,26 +203,35 @@ export const goalsCommand: CommandModule<GlobalOptions, GoalsOptions> = {
       }),
 
   handler: async (argv) => {
-    // Load all goals
-    let goals = await listGoals()
+    try {
+      // Load all goals
+      let goals = await listGoals()
 
-    // Apply category filter (case-insensitive)
-    if (argv.category) {
-      goals = goals.filter(
-        (g) => g.category.toLowerCase() === argv.category!.toLowerCase()
-      )
-    }
+      // Apply category filter (case-insensitive)
+      if (argv.category) {
+        goals = goals.filter(
+          (g) => g.category.toLowerCase() === argv.category!.toLowerCase()
+        )
+      }
 
-    // Apply status filter
-    if (argv.status) {
-      goals = goals.filter((g) => g.state === argv.status)
-    }
+      // Apply status filter
+      if (argv.status) {
+        goals = goals.filter((g) => g.state === argv.status)
+      }
 
-    // Output
-    if (argv.json) {
-      console.log(JSON.stringify(goals, null, 2))
-    } else {
-      displayGoals(goals)
+      // Output
+      if (argv.json) {
+        console.log(JSON.stringify(goals, null, 2))
+      } else {
+        displayGoals(goals)
+      }
+    } catch (err) {
+      Log.formatAndLogError("Failed to load goals", err)
+      if (argv.json) {
+        // Output empty array for JSON mode to maintain parseable output
+        console.log("[]")
+      }
+      process.exit(1)
     }
   },
 }

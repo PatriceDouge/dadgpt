@@ -10,6 +10,7 @@ import { render } from "ink"
 import React from "react"
 import { App } from "../../tui/App"
 import type { GlobalOptions } from "../index"
+import { Log } from "../../util/log"
 
 /**
  * Options specific to the run command.
@@ -51,25 +52,31 @@ export const runCommand: CommandModule<GlobalOptions, RunOptions> = {
       }),
 
   handler: async (argv) => {
-    // Combine message array into a single string if provided
-    const initialMessage = argv.message?.length ? argv.message.join(" ") : undefined
+    try {
+      // Combine message array into a single string if provided
+      const initialMessage = argv.message?.length ? argv.message.join(" ") : undefined
 
-    // Determine session ID to use
-    const sessionId: string | undefined = argv.session
+      // Determine session ID to use
+      const sessionId: string | undefined = argv.session
 
-    // If --continue is specified without --session, we could load the most recent session
-    // For now, we'll leave this as undefined and let useSession create a new session
-    // TODO: Implement loading most recent session when --continue is specified
+      // If --continue is specified without --session, we could load the most recent session
+      // For now, we'll leave this as undefined and let useSession create a new session
+      // TODO: Implement loading most recent session when --continue is specified
 
-    // Render the Ink App
-    const { waitUntilExit } = render(
-      React.createElement(App, {
-        initialMessage,
-        sessionId,
-      })
-    )
+      // Render the Ink App
+      const { waitUntilExit } = render(
+        React.createElement(App, {
+          initialMessage,
+          sessionId,
+        })
+      )
 
-    // Wait for the app to exit (Ctrl+C or Escape)
-    await waitUntilExit()
+      // Wait for the app to exit (Ctrl+C or Escape)
+      await waitUntilExit()
+    } catch (err) {
+      Log.formatAndLogError("Failed to start interactive interface", err)
+      console.error("\x1b[90mTry running with --debug for more details.\x1b[0m")
+      process.exit(1)
+    }
   },
 }

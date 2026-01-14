@@ -126,7 +126,7 @@ export namespace ChatLoop {
     let finalContent = ""
 
     // Track usage
-    let totalUsage = {
+    const totalUsage = {
       promptTokens: 0,
       completionTokens: 0,
       totalTokens: 0,

@@ -9,6 +9,7 @@ import type { CommandModule } from "yargs"
 import { Storage } from "../../storage/storage"
 import type { GlobalOptions } from "../index"
 import type { TodoState, TodoContext } from "../../state/todo.machine"
+import { Log } from "../../util/log"
 
 /**
  * Options specific to the todos command.
@@ -200,32 +201,41 @@ export const todosCommand: CommandModule<GlobalOptions, TodosOptions> = {
       }),
 
   handler: async (argv) => {
-    // Load all todos
-    let todos = await listTodos()
+    try {
+      // Load all todos
+      let todos = await listTodos()
 
-    // Apply status filter
-    if (argv.status) {
-      todos = todos.filter((t) => t.state === argv.status)
-    }
+      // Apply status filter
+      if (argv.status) {
+        todos = todos.filter((t) => t.state === argv.status)
+      }
 
-    // Apply priority filter
-    if (argv.priority) {
-      todos = todos.filter((t) => t.priority === argv.priority)
-    }
+      // Apply priority filter
+      if (argv.priority) {
+        todos = todos.filter((t) => t.priority === argv.priority)
+      }
 
-    // Apply tag filter (case-insensitive)
-    if (argv.tag) {
-      const tagLower = argv.tag.toLowerCase()
-      todos = todos.filter((t) =>
-        t.tags.some((tag) => tag.toLowerCase() === tagLower)
-      )
-    }
+      // Apply tag filter (case-insensitive)
+      if (argv.tag) {
+        const tagLower = argv.tag.toLowerCase()
+        todos = todos.filter((t) =>
+          t.tags.some((tag) => tag.toLowerCase() === tagLower)
+        )
+      }
 
-    // Output
-    if (argv.json) {
-      console.log(JSON.stringify(todos, null, 2))
-    } else {
-      displayTodos(todos)
+      // Output
+      if (argv.json) {
+        console.log(JSON.stringify(todos, null, 2))
+      } else {
+        displayTodos(todos)
+      }
+    } catch (err) {
+      Log.formatAndLogError("Failed to load todos", err)
+      if (argv.json) {
+        // Output empty array for JSON mode to maintain parseable output
+        console.log("[]")
+      }
+      process.exit(1)
     }
   },
 }
