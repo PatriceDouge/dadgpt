@@ -276,3 +276,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - wrap="wrap" on Text ensures content wraps properly in terminal
   - toLocaleTimeString with options {hour: "2-digit", minute: "2-digit"} for clean time formatting
 ---
+
+## 2026-01-13 - P3-005
+- What was implemented: Created ChatView component for displaying conversation history
+- Files changed: src/tui/components/ChatView.tsx (new)
+- **Learnings for future iterations:**
+  - ChatView renders MessageBubble for each message in the messages array
+  - Empty state shows gray text: "Start a conversation by typing a message below."
+  - Loading indicator uses inline LoadingSpinner component with braille animation frames
+  - Spinner uses useState + useEffect with setInterval for animation (80ms interval)
+  - flexGrow={1} on outer Box allows component to expand to fill available space
+  - Export Message interface for use by parent components
+---
