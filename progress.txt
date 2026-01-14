@@ -242,3 +242,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Box drawing characters stored as plain strings, dimmed versions use chalk.dim()
   - Style functions (chalk.bold.white, etc.) can be composed for semantic styles
 ---
+
+## 2026-01-13 - P3-002
+- What was implemented: Created ASCII art header component for TUI
+- Files changed: src/tui/components/Header.tsx (new)
+- **Learnings for future iterations:**
+  - React Ink components go in src/tui/components/ directory
+  - Use React.ReactElement as return type for Ink components with TypeScript
+  - Ink uses color prop directly on Text (e.g., color="blueBright") not chalk
+  - ASCII art in multiline strings needs .trim() to remove leading/trailing newlines
+  - Box component's flexDirection="column" is useful for vertical layouts
+  - marginTop/marginBottom props for spacing between elements
+---
