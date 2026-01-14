@@ -109,10 +109,15 @@ export namespace Session {
         )
       )
 
-      // Filter out undefined and sort by timestamp
+      // Filter out undefined and sort by timestamp, then by id for stable ordering
       return messages
         .filter((msg): msg is MessageData => msg !== undefined)
-        .sort((a, b) => a.timestamp - b.timestamp)
+        .sort((a, b) => {
+          const timeDiff = a.timestamp - b.timestamp
+          if (timeDiff !== 0) return timeDiff
+          // Use ULID for secondary sort (ULIDs are lexicographically sortable)
+          return a.id.localeCompare(b.id)
+        })
     } catch (err) {
       Log.formatAndLogError("Failed to get messages for session", err)
       return []
