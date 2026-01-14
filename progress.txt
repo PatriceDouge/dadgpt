@@ -587,3 +587,17 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - createProgressBar() uses █ and ░ unicode characters for visual progress bar
   - formatDueDate() calculates days until/overdue and applies appropriate color
 ---
+
+## 2026-01-14 - P5-006
+- What was implemented: Created CLI todos command for listing todos from the command line
+- Files changed: src/cli/commands/todos.ts (new), src/cli/index.ts (updated)
+- **Learnings for future iterations:**
+  - Todos command follows same CommandModule pattern as goals command
+  - Todos are read directly from storage using Storage.list(["todos"]) and Storage.read()
+  - StoredTodo interface extends TodoContext with state field (matches src/tool/todo.ts)
+  - Status icons for todos: ○ (pending), ◐ (in_progress), ⊗ (blocked), ⏸ (deferred), ● (done), ✗ (cancelled)
+  - Priority badges with colors: !!! (high/red), !! (medium/yellow), ! (low/gray)
+  - Sorting: priority first (high > medium > low), then due date (earliest first, nulls last), then createdAt
+  - Tags displayed in cyan brackets: [tag1, tag2]
+  - Filters: --status/-s, --priority/-p, --tag/-t (case-insensitive), --json
+---
