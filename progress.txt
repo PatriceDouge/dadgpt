@@ -231,3 +231,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Status field in context is updated alongside state transitions for consistency
   - createProjectContext() helper follows same pattern as goal/todo
 ---
+
+## 2026-01-13 - P3-001
+- What was implemented: Created grayscale theme system for TUI
+- Files changed: src/tui/theme.ts (new)
+- **Learnings for future iterations:**
+  - TUI components go in src/tui/ directory
+  - Theme exports individual objects (text, status, ui, styles, box, dimBox) and combined theme object
+  - Uses chalk library for terminal colors (not Ink's color props)
+  - Box drawing characters stored as plain strings, dimmed versions use chalk.dim()
+  - Style functions (chalk.bold.white, etc.) can be composed for semantic styles
+---
