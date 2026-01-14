@@ -195,3 +195,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Mock Date.now with vi.spyOn(Date, "now") for consistent test results
   - Always call actor.stop() in tests to clean up
 ---
+
+## 2026-01-13 - P2-006
+- What was implemented: Created XState todo lifecycle state machine
+- Files changed: src/state/todo.machine.ts (new)
+- **Learnings for future iterations:**
+  - Todo state machine follows same patterns as goal machine
+  - TodoState includes 6 states: pending, in_progress, blocked, deferred, done, cancelled
+  - Unlike goal machine, done and cancelled are NOT final states (can REOPEN)
+  - BLOCK event stores blockedBy ID in context, UNBLOCK clears it to null
+  - DEFER event stores the until date in dueDate field
+  - Can COMPLETE directly from pending state (useful for quick tasks)
+---
