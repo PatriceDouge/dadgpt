@@ -425,3 +425,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Transition action handles state machine events including COMPLETE_MILESTONE with milestoneId
   - Check for final states (completed/abandoned) before attempting transitions
 ---
+
+## 2026-01-13 - P4-006
+- What was implemented: Created comprehensive unit tests for the Goal Tool
+- Files changed: test/unit/tool/goal.test.ts (new)
+- **Learnings for future iterations:**
+  - Tool tests go in test/unit/tool/ directory
+  - Create ToolContext mock: `const mockCtx: ToolContext = { sessionId: "test-session" }`
+  - Use DADGPT_DATA_DIR env var override for test isolation
+  - Clear Bus.clear() in beforeEach to reset event handlers between tests
+  - Use vi.fn() to spy on Bus events: `Bus.subscribe("goal.created", handler)`
+  - Goal tool returns metadata with goalId for create operations
+  - Access stored goal data via metadata?.goal in get action results
+  - Test state machine transitions by chaining transition actions (START, PAUSE, RESUME, COMPLETE)
+  - 28 tests cover: create (required/all fields), list (filters), get, update, transition, delete
+---
