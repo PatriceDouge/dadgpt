@@ -440,3 +440,19 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Test state machine transitions by chaining transition actions (START, PAUSE, RESUME, COMPLETE)
   - 28 tests cover: create (required/all fields), list (filters), get, update, transition, delete
 ---
+
+## 2026-01-13 - P4-007
+- What was implemented: Created Todo Tool with full CRUD operations and state machine integration
+- Files changed: src/tool/todo.ts (new)
+- **Learnings for future iterations:**
+  - Todo Tool follows same patterns as Goal Tool (StoredTodo extends TodoContext with state field)
+  - Todos are stored at ["todos", id] path in storage
+  - Uses createTimestampedId("todo") for readable IDs like "todo_01HXYZ..."
+  - List action sorts by priority (high > medium > low) then by dueDate (earliest first, nulls last)
+  - Priority icons in list: high="!!!", medium="!!", low="!"
+  - Complete action is a shortcut that only works from pending or in_progress states
+  - BLOCK event requires blockedBy parameter, DEFER event requires until (date) parameter
+  - Unlike goal, todo states (done, cancelled) are NOT final - can REOPEN back to pending
+  - Transition checks if state actually changed and returns "No Change" if event was invalid
+  - Bus events: todo.created, todo.completed, todo.deleted
+---
