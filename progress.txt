@@ -386,3 +386,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - LanguageModelV1 is the correct type for AI SDK language models
   - Provider namespace exports listProviders(), isSupported(), getProviderInfo() utility functions
 ---
+
+## 2026-01-13 - P4-003
+- What was implemented: Created tool system types and interfaces
+- Files changed: src/tool/types.ts (new)
+- **Learnings for future iterations:**
+  - Tool files go in src/tool/ directory
+  - Tool interface is generic over TParams (Zod schema): `Tool<TParams extends z.ZodTypeAny>`
+  - Use `import type { z }` for type-only imports from zod
+  - ToolContext provides session context (sessionId, userId?) to tool execution
+  - ToolResult returns structured output (title, output, metadata?)
+  - ToolExecution tracks execution state with status, timing, and error information
+---
