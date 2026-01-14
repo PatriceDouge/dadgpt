@@ -55,7 +55,7 @@ export const runCommand: CommandModule<GlobalOptions, RunOptions> = {
     const initialMessage = argv.message?.length ? argv.message.join(" ") : undefined
 
     // Determine session ID to use
-    let sessionId: string | undefined = argv.session
+    const sessionId: string | undefined = argv.session
 
     // If --continue is specified without --session, we could load the most recent session
     // For now, we'll leave this as undefined and let useSession create a new session
