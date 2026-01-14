@@ -299,3 +299,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Standalone Spinner component can be imported and reused in other components (ChatView has inline version)
   - Use constants (SPINNER_FRAMES, ANIMATION_INTERVAL) for maintainability
 ---
+
+## 2026-01-13 - P3-007
+- What was implemented: Created ToolCall component for displaying tool execution status in TUI
+- Files changed: src/tui/components/ToolCall.tsx (new)
+- **Learnings for future iterations:**
+  - ToolStatus type: "pending" | "running" | "completed" | "error"
+  - Status icons mapped via Record<ToolStatus, string>: pending (○), running (◐), completed (●), error (✗)
+  - Color mapping also via Record<ToolStatus, string> for type-safe status color lookup
+  - Use borderStyle="single" for tool call boxes (vs "round" for input boxes)
+  - Truncate helper function keeps UI clean: input truncated to 60 chars, output to 100 chars
+  - Only show output when status === "completed", only show error when status === "error"
+---
