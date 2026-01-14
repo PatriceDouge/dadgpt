@@ -159,3 +159,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Default permissions: allow read-only tools (read, goal, todo, project, family), ask for write/bash
   - goalCategories default to Health, Family, Work, Personal, Finance
 ---
+
+## 2026-01-13 - P2-003
+- What was implemented: Created Config namespace for hierarchical config loading and merging
+- Files changed: src/config/config.ts (new)
+- **Learnings for future iterations:**
+  - When exporting both a namespace and a type with the same name, use a type alias (`import { Config as ConfigType }`)
+  - Re-export the type with `export type { ConfigType as Config }` for consumers
+  - deepMerge function handles nested objects recursively, arrays are replaced not merged
+  - Config precedence: defaults < global (~/.dadgpt/config.json) < project (./dadgpt.config.json) < env vars
+  - Environment variables supported: DADGPT_PROVIDER, DADGPT_MODEL
+  - Config is cached until invalidate() is called
+---
