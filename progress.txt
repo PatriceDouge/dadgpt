@@ -508,3 +508,17 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Bus events: family.added, family.updated, family.removed (different naming convention than other tools)
   - FamilyMember type imported from src/config/schema.ts (already defined in P2-001)
 ---
+
+## 2026-01-13 - P4-012
+- What was implemented: Created File Tools (Read and Write) for AI file operations
+- Files changed: src/tool/read.ts (new), src/tool/write.ts (new)
+- **Learnings for future iterations:**
+  - File tools use node:fs/promises and node:path (following codebase pattern)
+  - ReadTool supports offset (0-indexed line start) and limit (max lines) parameters
+  - ReadTool output includes line numbers in format "  N | content" for easy reference
+  - WriteTool supports append mode and createDirectories option (defaults to true)
+  - Both tools use resolvePath() helper to handle relative vs absolute paths
+  - Error handling checks for ENOENT (not found), EACCES (permission denied), EROFS (read-only fs)
+  - Tools follow Tool<TParams> interface pattern from src/tool/types.ts
+  - File tools are simpler than entity tools (Goal/Todo/Project) - no state machines or bus events
+---
