@@ -1,4 +1,7 @@
 // DadGPT - AI-powered personal command center
-// Main entry point - will be implemented in P1-004
+// Main entry point
 
-export {}
+console.log("DadGPT - Your AI-powered personal command center")
+console.log("Version: 0.1.0")
+console.log("")
+console.log("Run 'dadgpt --help' for usage information.")
