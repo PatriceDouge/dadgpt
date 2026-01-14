@@ -116,3 +116,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Clean up temp directories in afterEach with fs.rm(dir, { recursive: true, force: true })
   - Tests verify: write/read roundtrip, read non-existent, update creates/modifies, list files, remove, exists, ensureDir
 ---
+
+## 2026-01-13 - P1-011
+- What was implemented: Created Event Bus pub/sub system for decoupled communication
+- Files changed: src/bus/bus.ts (new)
+- **Learnings for future iterations:**
+  - Bus namespace follows same pattern as Log, Storage modules
+  - Handler Map stores Set<Handler<unknown>> to support multiple handlers per event
+  - publish() wraps each handler call in try/catch so errors don't break other handlers
+  - subscribe() returns an unsubscribe function for cleanup
+  - Events object provides type-safe event definitions with payload types
+  - EventName and EventPayload<E> types exported for type-safe usage
+---
