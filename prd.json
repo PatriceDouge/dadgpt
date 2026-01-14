@@ -1,0 +1,1117 @@
+{
+  "project": "DadGPT",
+  "branchName": "main",
+  "description": "Personal CLI tool for managing goals, todos, projects, and family life with an AI-powered chat interface",
+  "userStories": [
+    {
+      "id": "P1-001",
+      "title": "Project Setup - package.json and dependencies",
+      "description": "As a developer, I need the project initialized with all required dependencies so I can start building.",
+      "acceptanceCriteria": [
+        "package.json created with name 'dadgpt', version '0.1.0', type 'module'",
+        "All dependencies installed: ai, @ai-sdk/anthropic, @ai-sdk/openai, ink, ink-text-input, react, xstate, yargs, zod, ulid, chalk, dotenv",
+        "All devDependencies installed: @types/node, @types/react, @types/yargs, tsx, tsup, typescript, vitest, @vitest/coverage-v8, eslint, execa",
+        "Scripts defined: dev, build, start, test, test:watch, test:coverage, typecheck, lint",
+        "pnpm install completes without errors"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-002",
+      "title": "Project Setup - TypeScript configuration",
+      "description": "As a developer, I need TypeScript properly configured for the project.",
+      "acceptanceCriteria": [
+        "tsconfig.json created with strict mode enabled",
+        "Target ES2022 or later",
+        "Module resolution set to 'bundler' or 'node16'",
+        "JSX set to 'react-jsx' for Ink components",
+        "outDir set to 'dist'",
+        "include covers 'src/**/*'",
+        "pnpm typecheck passes with no errors"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-003",
+      "title": "Project Setup - Vitest configuration",
+      "description": "As a developer, I need Vitest configured for running tests.",
+      "acceptanceCriteria": [
+        "vitest.config.ts created",
+        "Test globals enabled",
+        "Environment set to 'node'",
+        "Include pattern: test/**/*.test.ts",
+        "Coverage provider set to 'v8'",
+        "Coverage reporters: text, json, html",
+        "pnpm test runs without configuration errors"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-004",
+      "title": "Project Setup - CLI entry point",
+      "description": "As a user, I need an executable entry point so I can run dadgpt from the command line.",
+      "acceptanceCriteria": [
+        "bin/dadgpt file created with shebang #!/usr/bin/env node",
+        "Uses tsx to import src/index.ts",
+        "src/index.ts created as main entry point",
+        "File is executable (chmod +x)",
+        "Running 'pnpm dev' starts the application"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-005",
+      "title": "Utility Layer - ID generation",
+      "description": "As a developer, I need a utility for generating unique IDs.",
+      "acceptanceCriteria": [
+        "src/util/id.ts created",
+        "createId() function returns ULID string",
+        "createTimestampedId(prefix) returns prefixed ULID",
+        "IDs are sortable by creation time",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-006",
+      "title": "Utility Layer - Logging",
+      "description": "As a developer, I need a logging utility with configurable levels.",
+      "acceptanceCriteria": [
+        "src/util/log.ts created",
+        "Log namespace with init(), debug(), info(), warn(), error() functions",
+        "Log levels: DEBUG, INFO, WARN, ERROR",
+        "init() accepts level option",
+        "debug() only logs when level is DEBUG",
+        "info() logs when level is DEBUG or INFO",
+        "warn() and error() always log",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-007",
+      "title": "Utility Layer - Error types",
+      "description": "As a developer, I need custom error types for better error handling.",
+      "acceptanceCriteria": [
+        "src/util/errors.ts created",
+        "DadGPTError base class extending Error",
+        "ConfigError for configuration issues",
+        "StorageError for storage operations",
+        "ProviderError for LLM provider issues",
+        "ToolError for tool execution failures",
+        "Each error type has code property",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-008",
+      "title": "Storage Layer - Path utilities",
+      "description": "As a developer, I need utilities for managing storage paths.",
+      "acceptanceCriteria": [
+        "src/storage/paths.ts created",
+        "DADGPT_HOME constant: ~/.dadgpt",
+        "DATA_DIR constant: ~/.dadgpt/data",
+        "CONFIG_PATH constant: ~/.dadgpt/config.json",
+        "AUTH_PATH constant: ~/.dadgpt/auth.json",
+        "getDataPath(...segments) returns full path with .json extension",
+        "getSessionPath(sessionId) returns session directory path",
+        "Supports DADGPT_DATA_DIR env override for testing",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-009",
+      "title": "Storage Layer - CRUD operations",
+      "description": "As a developer, I need a storage system for persisting JSON data.",
+      "acceptanceCriteria": [
+        "src/storage/storage.ts created",
+        "Storage.read<T>(key) reads and parses JSON, returns undefined if not found",
+        "Storage.write<T>(key, data) writes JSON with pretty printing",
+        "Storage.remove(key) deletes file, returns boolean",
+        "Storage.update<T>(key, fn) atomically updates data",
+        "Storage.list(prefix) returns array of keys in directory",
+        "Storage.exists(key) checks if file exists",
+        "Storage.ensureDir() creates data directory",
+        "Uses node:fs/promises, not Bun APIs",
+        "Typecheck passes"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-010",
+      "title": "Storage Layer - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the storage layer.",
+      "acceptanceCriteria": [
+        "test/unit/storage.test.ts created",
+        "Tests use temporary directory, cleaned up after each test",
+        "Test: write and read roundtrip",
+        "Test: read non-existent returns undefined",
+        "Test: update creates if not exists",
+        "Test: update modifies existing",
+        "Test: list returns json file names without extension",
+        "Test: remove deletes file",
+        "Test: exists returns correct boolean",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-011",
+      "title": "Event Bus - Pub/sub system",
+      "description": "As a developer, I need an event bus for decoupled communication.",
+      "acceptanceCriteria": [
+        "src/bus/bus.ts created",
+        "Bus.publish<T>(event, payload) publishes to all subscribers",
+        "Bus.subscribe<T>(event, handler) returns unsubscribe function",
+        "Bus.clear() removes all handlers",
+        "Handler errors do not break other handlers",
+        "Type-safe Events object with all event definitions",
+        "Events include: goal.created/updated/completed/deleted, todo.created/completed/deleted, session.created/message, tool.start/complete/error, permission.asked/replied",
+        "Typecheck passes"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P1-012",
+      "title": "Event Bus - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the event bus.",
+      "acceptanceCriteria": [
+        "test/unit/bus.test.ts created",
+        "Test: subscribe and publish delivers payload",
+        "Test: unsubscribe stops receiving events",
+        "Test: multiple handlers for same event all fire",
+        "Test: handler error does not break other handlers",
+        "Test: clear removes all handlers",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-001",
+      "title": "Config System - Zod schemas",
+      "description": "As a developer, I need Zod schemas for validating configuration.",
+      "acceptanceCriteria": [
+        "src/config/schema.ts created",
+        "ProviderConfigSchema: id, apiKey?, baseURL?",
+        "ModelConfigSchema: provider, model, temperature, maxTokens",
+        "PermissionRulesetSchema: allow[], deny[], ask[]",
+        "FamilyMemberSchema: id, name, relationship, birthday?, notes?",
+        "ConfigSchema with all fields and defaults",
+        "Exported types: Config, ProviderConfig, FamilyMember",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-002",
+      "title": "Config System - Default values",
+      "description": "As a developer, I need sensible default configuration values.",
+      "acceptanceCriteria": [
+        "src/config/defaults.ts created",
+        "DEFAULT_CONFIG object exported",
+        "defaultProvider: 'anthropic'",
+        "defaultModel: 'claude-sonnet-4-20250514'",
+        "theme: 'dark'",
+        "goalCategories: Health, Family, Work, Personal, Finance",
+        "permissions.allow: read, goal, todo, project, family",
+        "permissions.ask: write, bash",
+        "Typecheck passes"
+      ],
+      "priority": 14,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-003",
+      "title": "Config System - Loading and merging",
+      "description": "As a developer, I need hierarchical config loading with proper precedence.",
+      "acceptanceCriteria": [
+        "src/config/config.ts created",
+        "Config.get() loads and merges configs",
+        "Precedence: defaults < global (~/.dadgpt/config.json) < project (dadgpt.config.json) < env vars",
+        "Config.invalidate() clears cache",
+        "Config.save() persists to global config",
+        "Environment variables: DADGPT_PROVIDER, DADGPT_MODEL",
+        "Uses node:fs, not Bun APIs",
+        "Typecheck passes"
+      ],
+      "priority": 15,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-004",
+      "title": "Goal State Machine - XState definition",
+      "description": "As a developer, I need an XState machine for goal lifecycle management.",
+      "acceptanceCriteria": [
+        "src/state/goal.machine.ts created",
+        "GoalContext interface: id, title, category, description, progress, milestones[], dueDate, createdAt, updatedAt",
+        "GoalEvent union: START, PAUSE, RESUME, UPDATE_PROGRESS, COMPLETE_MILESTONE, COMPLETE, ABANDON",
+        "GoalState: not_started, in_progress, paused, completed, abandoned",
+        "goalMachine with proper state transitions",
+        "completed and abandoned are final states",
+        "UPDATE_PROGRESS clamps between 0-100",
+        "COMPLETE_MILESTONE marks specific milestone as completed",
+        "createGoalContext() helper function",
+        "Typecheck passes"
+      ],
+      "priority": 16,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-005",
+      "title": "Goal State Machine - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the goal state machine.",
+      "acceptanceCriteria": [
+        "test/unit/state/goal.machine.test.ts created",
+        "Test: starts in not_started state",
+        "Test: transitions not_started -> in_progress on START",
+        "Test: can pause and resume",
+        "Test: UPDATE_PROGRESS clamps to 0-100",
+        "Test: COMPLETE_MILESTONE marks correct milestone",
+        "Test: completed is final state",
+        "Test: can abandon from any non-final state",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 17,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-006",
+      "title": "Todo State Machine - XState definition",
+      "description": "As a developer, I need an XState machine for todo lifecycle management.",
+      "acceptanceCriteria": [
+        "src/state/todo.machine.ts created",
+        "TodoContext interface: id, title, description, priority, dueDate, tags[], goalId, blockedBy, createdAt, updatedAt, completedAt",
+        "TodoEvent union: START, COMPLETE, BLOCK, UNBLOCK, DEFER, CANCEL, REOPEN",
+        "TodoState: pending, in_progress, blocked, deferred, done, cancelled",
+        "todoMachine with proper state transitions",
+        "BLOCK stores blockedBy ID, UNBLOCK clears it",
+        "DEFER stores dueDate",
+        "REOPEN works from done and cancelled",
+        "createTodoContext() helper function",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-007",
+      "title": "Todo State Machine - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the todo state machine.",
+      "acceptanceCriteria": [
+        "test/unit/state/todo.machine.test.ts created",
+        "Test: starts in pending state",
+        "Test: full lifecycle pending -> in_progress -> done",
+        "Test: can be blocked and unblocked",
+        "Test: blocked stores blockedBy ID",
+        "Test: can defer with date",
+        "Test: can reopen completed todo",
+        "Test: can cancel and reopen",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 19,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P2-008",
+      "title": "Project State Machine - XState definition",
+      "description": "As a developer, I need an XState machine for project lifecycle management.",
+      "acceptanceCriteria": [
+        "src/state/project.machine.ts created",
+        "ProjectContext interface: id, name, description, status, budget, milestones[], todoIds[], goalId, createdAt, updatedAt",
+        "ProjectEvent union: START, PAUSE, RESUME, COMPLETE, CANCEL, ADD_MILESTONE, COMPLETE_MILESTONE",
+        "States: planning, active, on_hold, completed, cancelled",
+        "projectMachine with proper transitions",
+        "ADD_MILESTONE adds to milestones array",
+        "COMPLETE_MILESTONE marks specific milestone",
+        "completed and cancelled are final states",
+        "Typecheck passes"
+      ],
+      "priority": 20,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-001",
+      "title": "TUI - Grayscale theme system",
+      "description": "As a user, I want a clean grayscale aesthetic matching OpenCode's style.",
+      "acceptanceCriteria": [
+        "src/tui/theme.ts created",
+        "theme object with text colors: primary (white), secondary (gray), muted (dim), accent (blueBright)",
+        "status colors: success (green), error (red), warning (yellow), info (blue)",
+        "UI elements: border, borderLight, bullet, arrow, prompt",
+        "styles: header, subheader, label, value, link, code, timestamp",
+        "Box drawing characters exported",
+        "Uses chalk for colors",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-002",
+      "title": "TUI - ASCII art header component",
+      "description": "As a user, I want to see a branded header when starting DadGPT.",
+      "acceptanceCriteria": [
+        "src/tui/components/Header.tsx created",
+        "Displays ASCII art 'DADGPT' logo in blueBright",
+        "Shows tagline: 'Your AI-powered personal command center'",
+        "Shows status bar: model · provider · cwd",
+        "Props: model, provider, cwd",
+        "Uses Ink Box and Text components",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-003",
+      "title": "TUI - Input box component",
+      "description": "As a user, I need a text input area to type messages.",
+      "acceptanceCriteria": [
+        "src/tui/components/InputBox.tsx created",
+        "Rounded border style in gray",
+        "Blue '>' prompt indicator",
+        "Uses ink-text-input for text entry",
+        "Props: onSubmit, disabled, placeholder",
+        "Clears input after submit",
+        "Disables input when disabled=true",
+        "Typecheck passes"
+      ],
+      "priority": 23,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-004",
+      "title": "TUI - Message bubble component",
+      "description": "As a user, I want to see chat messages clearly distinguished by role.",
+      "acceptanceCriteria": [
+        "src/tui/components/MessageBubble.tsx created",
+        "Props: role ('user' | 'assistant'), content, timestamp",
+        "User messages show 'You' in blueBright",
+        "Assistant messages show 'DadGPT' in gray",
+        "Optional timestamp in dim gray",
+        "Content wraps properly",
+        "Typecheck passes"
+      ],
+      "priority": 24,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-005",
+      "title": "TUI - Chat view component",
+      "description": "As a user, I want to see the conversation history.",
+      "acceptanceCriteria": [
+        "src/tui/components/ChatView.tsx created",
+        "Props: messages[], isLoading",
+        "Renders MessageBubble for each message",
+        "Shows empty state message when no messages",
+        "Shows loading indicator when isLoading and no streaming content",
+        "Messages scroll/overflow properly",
+        "Typecheck passes"
+      ],
+      "priority": 25,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-006",
+      "title": "TUI - Spinner component",
+      "description": "As a user, I want visual feedback when waiting for AI response.",
+      "acceptanceCriteria": [
+        "src/tui/components/Spinner.tsx created",
+        "Animated spinner using braille characters",
+        "Updates every ~80ms",
+        "Blue color for spinner",
+        "Cleans up interval on unmount",
+        "Typecheck passes"
+      ],
+      "priority": 26,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-007",
+      "title": "TUI - Tool call display component",
+      "description": "As a user, I want to see when the AI is executing tools.",
+      "acceptanceCriteria": [
+        "src/tui/components/ToolCall.tsx created",
+        "Props: tool, status, input, output, error",
+        "Status icons: pending (○), running (◐), completed (●), error (✗)",
+        "Color coding: pending=gray, running=blue, completed=green, error=red",
+        "Shows tool name and status",
+        "Shows truncated input preview",
+        "Shows truncated output on completion",
+        "Shows error message on error",
+        "Single border style in gray",
+        "Typecheck passes"
+      ],
+      "priority": 27,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-008",
+      "title": "TUI - useSession hook",
+      "description": "As a developer, I need a hook for managing chat sessions.",
+      "acceptanceCriteria": [
+        "src/tui/hooks/useSession.ts created",
+        "Returns: session, messages, addMessage",
+        "Creates new session if no sessionId provided",
+        "Loads existing session and messages if sessionId provided",
+        "addMessage saves to storage and updates state",
+        "Publishes session.created and session.message events",
+        "Typecheck passes"
+      ],
+      "priority": 28,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-009",
+      "title": "TUI - useChat hook",
+      "description": "As a developer, I need a hook for AI chat interactions.",
+      "acceptanceCriteria": [
+        "src/tui/hooks/useChat.ts created",
+        "Returns: isLoading, streamingContent, error, sendMessage",
+        "sendMessage loads config, gets model, streams response",
+        "Updates streamingContent during stream",
+        "Saves assistant message to storage when complete",
+        "Clears streamingContent after saving",
+        "Handles errors gracefully",
+        "Typecheck passes"
+      ],
+      "priority": 29,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-010",
+      "title": "TUI - useKeyboard hook",
+      "description": "As a developer, I need a hook for keyboard shortcuts.",
+      "acceptanceCriteria": [
+        "src/tui/hooks/useKeyboard.ts created",
+        "Uses Ink's useInput hook",
+        "Ctrl+C exits application",
+        "Escape exits application",
+        "Returns nothing (side-effect only)",
+        "Typecheck passes"
+      ],
+      "priority": 30,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P3-011",
+      "title": "TUI - Main App component",
+      "description": "As a user, I want a complete chat interface.",
+      "acceptanceCriteria": [
+        "src/tui/App.tsx created",
+        "Props: initialMessage?, sessionId?",
+        "Composes Header, ChatView, InputBox",
+        "Loads config on mount",
+        "Uses useSession and useChat hooks",
+        "Sends initialMessage if provided",
+        "Combines stored messages with streamingContent",
+        "Handles keyboard shortcuts",
+        "Disables input while loading",
+        "Full height layout with flexbox",
+        "Typecheck passes"
+      ],
+      "priority": 31,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-001",
+      "title": "Provider System - Model definitions",
+      "description": "As a developer, I need model metadata for supported LLMs.",
+      "acceptanceCriteria": [
+        "src/provider/models.ts created",
+        "ModelInfo interface: id, name, provider, contextWindow, maxOutput",
+        "MODELS record with claude-sonnet-4-20250514, claude-3-5-haiku-20241022, gpt-4o, gpt-4o-mini",
+        "getModelInfo(modelId) returns ModelInfo or undefined",
+        "Typecheck passes"
+      ],
+      "priority": 32,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-002",
+      "title": "Provider System - Provider abstraction",
+      "description": "As a developer, I need a unified interface for LLM providers.",
+      "acceptanceCriteria": [
+        "src/provider/provider.ts created",
+        "Provider.getModel(providerId, modelId) returns LanguageModel",
+        "Supports 'anthropic' provider using @ai-sdk/anthropic",
+        "Supports 'openai' provider using @ai-sdk/openai",
+        "Reads API keys from config or environment variables",
+        "Throws descriptive error if API key missing",
+        "Provider.listProviders() returns available providers",
+        "Typecheck passes"
+      ],
+      "priority": 33,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-003",
+      "title": "Tool System - Types and interfaces",
+      "description": "As a developer, I need well-defined types for the tool system.",
+      "acceptanceCriteria": [
+        "src/tool/types.ts created",
+        "ToolContext interface: sessionId, userId?",
+        "ToolResult interface: title, output, metadata?",
+        "Tool interface: id, description, parameters (Zod), execute(args, ctx)",
+        "ToolStatus type: pending | running | completed | error",
+        "ToolExecution interface for tracking execution state",
+        "Typecheck passes"
+      ],
+      "priority": 34,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-004",
+      "title": "Tool System - Registry",
+      "description": "As a developer, I need a central registry for all tools.",
+      "acceptanceCriteria": [
+        "src/tool/registry.ts created",
+        "ToolRegistry.register(tool) adds tool to registry",
+        "ToolRegistry.get(id) returns tool or undefined",
+        "ToolRegistry.getAll() returns all registered tools",
+        "ToolRegistry.getToolsForAI() returns tools formatted for AI SDK",
+        "Auto-registers default tools on import",
+        "Typecheck passes"
+      ],
+      "priority": 35,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-005",
+      "title": "Goal Tool - CRUD operations",
+      "description": "As a user, I want the AI to manage my goals.",
+      "acceptanceCriteria": [
+        "src/tool/goal.ts created",
+        "Actions: list, create, get, update, transition, delete",
+        "list: filters by category and status",
+        "create: creates goal with title, category, description, dueDate",
+        "get: returns goal details",
+        "update: updates title, description, progress",
+        "transition: sends state machine events (START, PAUSE, RESUME, COMPLETE, ABANDON)",
+        "delete: removes goal",
+        "Uses goal state machine for transitions",
+        "Publishes bus events",
+        "Typecheck passes"
+      ],
+      "priority": 36,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-006",
+      "title": "Goal Tool - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the goal tool.",
+      "acceptanceCriteria": [
+        "test/unit/tool/goal.test.ts created",
+        "Test: create goal with required fields",
+        "Test: create goal with all fields",
+        "Test: list all goals",
+        "Test: list filters by category",
+        "Test: transition through states",
+        "Test: get goal by ID",
+        "Test: delete goal",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 37,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-007",
+      "title": "Todo Tool - CRUD operations",
+      "description": "As a user, I want the AI to manage my todos.",
+      "acceptanceCriteria": [
+        "src/tool/todo.ts created",
+        "Actions: list, create, get, complete, transition, delete",
+        "list: filters by status, priority, tag; sorts by priority and dueDate",
+        "create: creates todo with title, description, priority, dueDate, tags, goalId",
+        "complete: quick shortcut to mark done",
+        "transition: sends state machine events",
+        "Uses todo state machine",
+        "Publishes bus events",
+        "Typecheck passes"
+      ],
+      "priority": 38,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-008",
+      "title": "Todo Tool - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the todo tool.",
+      "acceptanceCriteria": [
+        "test/unit/tool/todo.test.ts created",
+        "Test: create todo with required fields",
+        "Test: list with filters",
+        "Test: complete shortcut",
+        "Test: block and unblock",
+        "Test: defer with date",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 39,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-009",
+      "title": "Project Tool - CRUD operations",
+      "description": "As a user, I want the AI to manage my projects.",
+      "acceptanceCriteria": [
+        "src/tool/project.ts created",
+        "Actions: list, create, get, update, transition, addMilestone, delete",
+        "create: creates project with name, description, budget, goalId",
+        "addMilestone: adds milestone with title and dueDate",
+        "transition: START, PAUSE, RESUME, COMPLETE, CANCEL, COMPLETE_MILESTONE",
+        "Uses project state machine",
+        "Typecheck passes"
+      ],
+      "priority": 40,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-010",
+      "title": "Project Tool - Unit tests",
+      "description": "As a developer, I need comprehensive tests for the project tool.",
+      "acceptanceCriteria": [
+        "test/unit/tool/project.test.ts created",
+        "Test: create project",
+        "Test: add milestone",
+        "Test: complete milestone",
+        "Test: transition through states",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 41,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-011",
+      "title": "Family Tool - Info management",
+      "description": "As a user, I want the AI to know about my family.",
+      "acceptanceCriteria": [
+        "src/tool/family.ts created",
+        "Actions: list, add, get, update, remove, upcoming",
+        "list: lists all family members",
+        "add: adds member with name, relationship, birthday, notes",
+        "upcoming: returns upcoming birthdays/anniversaries",
+        "Stores in config family array",
+        "Typecheck passes"
+      ],
+      "priority": 42,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P4-012",
+      "title": "File Tools - Read and Write",
+      "description": "As a user, I want the AI to read and write files when needed.",
+      "acceptanceCriteria": [
+        "src/tool/read.ts created",
+        "src/tool/write.ts created",
+        "ReadTool: reads file content, supports offset and limit",
+        "WriteTool: writes content to file, creates directories",
+        "Both use node:fs/promises",
+        "Both have proper error handling",
+        "Typecheck passes"
+      ],
+      "priority": 43,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-001",
+      "title": "CLI - Yargs setup",
+      "description": "As a developer, I need the CLI framework configured.",
+      "acceptanceCriteria": [
+        "src/cli/index.ts created",
+        "Uses yargs with hideBin",
+        "scriptName set to 'dadgpt'",
+        "Registers all commands",
+        "Global options: --debug, --model, --provider",
+        "Middleware initializes logging",
+        "Help and version flags configured",
+        "Strict mode enabled",
+        "Typecheck passes"
+      ],
+      "priority": 44,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-002",
+      "title": "CLI - Run command (default)",
+      "description": "As a user, running 'dadgpt' should open the interactive TUI.",
+      "acceptanceCriteria": [
+        "src/cli/commands/run.ts created",
+        "Command: '$0 [message..]' (default command)",
+        "Options: --continue/-c, --session/-s",
+        "If message provided, sends as initial message",
+        "Renders Ink App component",
+        "Waits for exit",
+        "Typecheck passes"
+      ],
+      "priority": 45,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-003",
+      "title": "CLI - Init command",
+      "description": "As a user, I want to initialize DadGPT in my project.",
+      "acceptanceCriteria": [
+        "src/cli/commands/init.ts created",
+        "Command: 'init'",
+        "Options: --template/-t (default, minimal), --force/-f",
+        "Creates dadgpt.md with template content",
+        "Ensures ~/.dadgpt directory exists",
+        "Shows next steps after creation",
+        "Warns if file exists without --force",
+        "Typecheck passes"
+      ],
+      "priority": 46,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-004",
+      "title": "CLI - Auth command",
+      "description": "As a user, I want to configure my API keys.",
+      "acceptanceCriteria": [
+        "src/cli/commands/auth.ts created",
+        "Command: 'auth [provider]'",
+        "Prompts for API key for each provider",
+        "Shows masked current key if exists",
+        "Saves to config",
+        "Supports configuring single provider or all",
+        "Typecheck passes"
+      ],
+      "priority": 47,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-005",
+      "title": "CLI - Goals command",
+      "description": "As a user, I want to view my goals from the command line.",
+      "acceptanceCriteria": [
+        "src/cli/commands/goals.ts created",
+        "Command: 'goals'",
+        "Options: --category/-c, --status/-s, --json",
+        "Lists goals grouped by category",
+        "Shows status icon, title, progress bar, due date",
+        "Supports JSON output",
+        "Shows empty state message when no goals",
+        "Typecheck passes"
+      ],
+      "priority": 48,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-006",
+      "title": "CLI - Todos command",
+      "description": "As a user, I want to view my todos from the command line.",
+      "acceptanceCriteria": [
+        "src/cli/commands/todos.ts created",
+        "Command: 'todos'",
+        "Options: --status/-s, --priority/-p, --tag/-t, --json",
+        "Lists todos sorted by priority then due date",
+        "Shows status icon, priority badge, title, due date",
+        "Supports JSON output",
+        "Shows empty state message when no todos",
+        "Typecheck passes"
+      ],
+      "priority": 49,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-007",
+      "title": "CLI - Integration tests",
+      "description": "As a developer, I need integration tests for CLI commands.",
+      "acceptanceCriteria": [
+        "test/integration/cli.test.ts created",
+        "Uses execa to run CLI commands",
+        "Test: init creates dadgpt.md",
+        "Test: goals shows empty state",
+        "Test: goals --json outputs valid JSON",
+        "Test: todos shows empty state",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 50,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-008",
+      "title": "Agent System - Main DadGPT agent",
+      "description": "As a developer, I need the main agent definition.",
+      "acceptanceCriteria": [
+        "src/agent/agent.ts created with Agent interface",
+        "src/agent/dad.ts created with DadAgent definition",
+        "src/agent/prompts.ts created with system prompts",
+        "DadAgent has full tool access",
+        "System prompt describes DadGPT's role and capabilities",
+        "Typecheck passes"
+      ],
+      "priority": 51,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-009",
+      "title": "Session System - Session management",
+      "description": "As a developer, I need proper session handling.",
+      "acceptanceCriteria": [
+        "src/session/session.ts created",
+        "Session.create() creates new session with ULID",
+        "Session.get(id) retrieves session",
+        "Session.list() lists all sessions",
+        "Session.getMessages(id) retrieves session messages",
+        "Session.addMessage(id, msg) adds message to session",
+        "Typecheck passes"
+      ],
+      "priority": 52,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-010",
+      "title": "Session System - Message types",
+      "description": "As a developer, I need proper message type definitions.",
+      "acceptanceCriteria": [
+        "src/session/message.ts created",
+        "UserMessage type with id, sessionId, role, content, timestamp",
+        "AssistantMessage type with id, sessionId, role, content, timestamp, model info, usage",
+        "ToolCall type with id, toolId, status, input, output, error, timestamps",
+        "Zod schemas for validation",
+        "Typecheck passes"
+      ],
+      "priority": 53,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P5-011",
+      "title": "Session System - Chat loop",
+      "description": "As a developer, I need the main chat processing loop.",
+      "acceptanceCriteria": [
+        "src/session/loop.ts created",
+        "ChatLoop.run(sessionId, signal) runs the main loop",
+        "Loads messages, calls LLM, processes tool calls",
+        "Continues until assistant finishes without tool calls",
+        "Handles abort signal for cancellation",
+        "Typecheck passes"
+      ],
+      "priority": 54,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-001",
+      "title": "Polish - Comprehensive error handling",
+      "description": "As a user, I want helpful error messages when things go wrong.",
+      "acceptanceCriteria": [
+        "All async operations wrapped in try-catch",
+        "Custom error types used appropriately",
+        "User-friendly error messages displayed",
+        "Stack traces only shown in debug mode",
+        "Graceful degradation where possible",
+        "No unhandled promise rejections"
+      ],
+      "priority": 55,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-002",
+      "title": "Polish - Edge case handling",
+      "description": "As a user, I want the app to handle edge cases gracefully.",
+      "acceptanceCriteria": [
+        "Empty config file handled",
+        "Missing ~/.dadgpt directory auto-created",
+        "Invalid JSON in storage handled",
+        "Network errors during AI calls handled",
+        "Ctrl+C during operation cancels cleanly",
+        "Very long messages handled"
+      ],
+      "priority": 56,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-003",
+      "title": "Polish - Config unit tests",
+      "description": "As a developer, I need tests for the config system.",
+      "acceptanceCriteria": [
+        "test/unit/config.test.ts created",
+        "Test: default config returned when no files exist",
+        "Test: global config loaded and merged",
+        "Test: env vars override config",
+        "Test: invalidate clears cache",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 57,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-004",
+      "title": "Polish - Session integration tests",
+      "description": "As a developer, I need integration tests for session management.",
+      "acceptanceCriteria": [
+        "test/integration/session.test.ts created",
+        "Test: create and retrieve session",
+        "Test: add messages to session",
+        "Test: list sessions",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 58,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-005",
+      "title": "Polish - E2E chat flow test",
+      "description": "As a developer, I need an end-to-end test of the chat flow.",
+      "acceptanceCriteria": [
+        "test/e2e/chat-flow.test.ts created",
+        "Test: send message and receive response (mocked LLM)",
+        "Test: tool execution during chat",
+        "Test: session persistence",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 59,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-006",
+      "title": "Polish - Permission system",
+      "description": "As a user, I want control over what tools the AI can use.",
+      "acceptanceCriteria": [
+        "src/permission/permission.ts created",
+        "src/permission/rules.ts created",
+        "Permission.check(tool, resource, ruleset) returns allow|deny|ask",
+        "Default rules from config applied",
+        "Typecheck passes"
+      ],
+      "priority": 60,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-007",
+      "title": "Polish - dadgpt.md parser",
+      "description": "As a user, I want to define goals and todos in a markdown file.",
+      "acceptanceCriteria": [
+        "src/parser/dadgpt-md.ts created",
+        "parseDadGPTMd(content) extracts goals, todos, family, projects",
+        "Handles markdown checkbox syntax",
+        "Extracts metadata from indented lines",
+        "Returns structured data",
+        "Typecheck passes"
+      ],
+      "priority": 61,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-008",
+      "title": "Polish - Parser unit tests",
+      "description": "As a developer, I need tests for the markdown parser.",
+      "acceptanceCriteria": [
+        "test/unit/parser/dadgpt-md.test.ts created",
+        "test/fixtures/dadgpt.md created with sample content",
+        "Test: parses goals section",
+        "Test: parses todos section",
+        "Test: parses family section",
+        "Test: handles empty sections",
+        "All tests pass with pnpm test"
+      ],
+      "priority": 62,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-009",
+      "title": "Polish - Test fixtures",
+      "description": "As a developer, I need test fixtures for consistent testing.",
+      "acceptanceCriteria": [
+        "test/fixtures/dadgpt.md created with sample goals, todos, family",
+        "test/fixtures/config.json created with sample config",
+        "test/fixtures/sample-goals.json created",
+        "Fixtures used consistently across tests"
+      ],
+      "priority": 63,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "P6-010",
+      "title": "Polish - Final typecheck and lint",
+      "description": "As a developer, I need the codebase to pass all checks.",
+      "acceptanceCriteria": [
+        "pnpm typecheck passes with zero errors",
+        "pnpm lint passes with zero errors",
+        "pnpm test passes with all tests green",
+        "pnpm test:coverage shows >80% coverage",
+        "No console.log statements in production code"
+      ],
+      "priority": 64,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}
