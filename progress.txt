@@ -218,3 +218,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - 21 tests cover all state transitions, BLOCK/UNBLOCK, DEFER, REOPEN, and context validation
   - Test that events only work from appropriate states (e.g., BLOCK only from in_progress)
 ---
+
+## 2026-01-13 - P2-008
+- What was implemented: Created XState project lifecycle state machine
+- Files changed: src/state/project.machine.ts (new)
+- **Learnings for future iterations:**
+  - Project state machine follows same patterns as goal and todo machines
+  - ProjectState includes 5 states: planning, active, on_hold, completed, cancelled
+  - Unlike todo machine, completed and cancelled ARE final states (like goal machine)
+  - ADD_MILESTONE can be called from both planning and active states
+  - COMPLETE_MILESTONE only available in active state
+  - Status field in context is updated alongside state transitions for consistency
+  - createProjectContext() helper follows same pattern as goal/todo
+---
