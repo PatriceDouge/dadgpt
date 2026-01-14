@@ -72,6 +72,11 @@ export const Events = {
   "project.completed": {} as { projectId: string },
   "project.deleted": {} as { projectId: string },
 
+  // Family events
+  "family.added": {} as { memberId: string },
+  "family.updated": {} as { memberId: string; changes: Record<string, unknown> },
+  "family.removed": {} as { memberId: string },
+
   // Session events
   "session.created": {} as { sessionId: string },
   "session.message": {} as { sessionId: string; messageId: string },
