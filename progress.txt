@@ -31,3 +31,31 @@
   - Need at least one .ts file in src/ for typecheck to work (otherwise error about no inputs)
   - noUncheckedIndexedAccess adds extra safety for array/object access
 ---
+
+## 2026-01-13 - P1-003
+- What was implemented: Created Vitest configuration for running tests
+- Files changed: vitest.config.ts (new), test/unit/placeholder.test.ts (new)
+- **Learnings for future iterations:**
+  - vitest.config.ts uses defineConfig from "vitest/config"
+  - Test files go in test/ directory with pattern **/*.test.ts
+  - Created placeholder test to verify configuration works
+  - Coverage reports to text, json, and html formats
+---
+
+## 2026-01-13 - P1-004
+- What was implemented: Created CLI entry point for dadgpt command
+- Files changed: bin/dadgpt (new), src/index.ts (updated)
+- **Learnings for future iterations:**
+  - bin/dadgpt uses `import("tsx/esm").then(() => import("../src/index.ts"))` pattern for tsx
+  - File must be executable (chmod +x) to work as CLI entry
+  - pnpm dev runs tsx src/index.ts directly for development
+---
+
+## 2026-01-13 - P1-005
+- What was implemented: Created ID generation utility using ULID
+- Files changed: src/util/id.ts (new), eslint.config.js (new), package.json (eslint deps added)
+- **Learnings for future iterations:**
+  - ESLint 9 requires flat config file (eslint.config.js) with @eslint/js and typescript-eslint packages
+  - ulid package provides ULID generation - IDs are lexicographically sortable by timestamp
+  - Utility modules go in src/util/ directory
+---
