@@ -76,8 +76,8 @@ export namespace Session {
    */
   export async function list(): Promise<SessionData[]> {
     try {
-      // Get all session directories
-      const sessionIds = await Storage.list(["sessions"])
+      // Get all session directories (sessions are stored in subdirectories)
+      const sessionIds = await Storage.listDirs(["sessions"])
 
       // Load each session
       const sessions = await Promise.all(

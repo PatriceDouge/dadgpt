@@ -116,6 +116,22 @@ export namespace Storage {
   }
 
   /**
+   * List all subdirectories in a directory.
+   * Useful for storage patterns where items are stored in subdirectories.
+   * @param prefix - Path segments for the directory to list
+   * @returns Array of subdirectory names
+   */
+  export async function listDirs(prefix: string[]): Promise<string[]> {
+    const dir = path.join(getDataDir(), ...prefix)
+    try {
+      const entries = await fs.readdir(dir, { withFileTypes: true })
+      return entries.filter((e) => e.isDirectory()).map((e) => e.name)
+    } catch {
+      return []
+    }
+  }
+
+  /**
    * Check if a file exists in storage.
    * @param key - Path segments relative to data directory
    * @returns true if file exists, false otherwise
