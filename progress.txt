@@ -363,3 +363,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - overflow="hidden" on the chat container to handle scrolling properly
   - Disable input (disabled prop) while isLoading to prevent user input during AI response
 ---
+
+## 2026-01-13 - P4-001
+- What was implemented: Created model definitions for supported LLM providers
+- Files changed: src/provider/models.ts (new)
+- **Learnings for future iterations:**
+  - Provider files go in src/provider/ directory
+  - ModelInfo interface defines: id, name, provider, contextWindow, maxOutput
+  - MODELS is a Record<string, ModelInfo> for easy lookup by model ID
+  - getModelInfo(modelId) helper function returns ModelInfo or undefined
+  - Supported models: claude-sonnet-4-20250514, claude-3-5-haiku-20241022, gpt-4o, gpt-4o-mini
+---
