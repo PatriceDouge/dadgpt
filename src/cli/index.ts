@@ -10,6 +10,7 @@
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import { Log, type LogLevel } from "../util/log"
+import { runCommand } from "./commands/run"
 
 /**
  * Global CLI options available to all commands.
@@ -66,6 +67,9 @@ export function buildCli() {
       .alias("help", "h")
       .version("0.1.0")
       .alias("version", "v")
+
+      // Register commands
+      .command(runCommand)
 
       // Strict mode - fail on unknown commands/options
       .strict()
