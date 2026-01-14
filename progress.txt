@@ -106,3 +106,13 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Storage.list() returns filenames without .json extension
   - Must import os from "node:os" at top level - cannot use require() in ESM
 ---
+
+## 2026-01-13 - P1-010
+- What was implemented: Created comprehensive unit tests for the Storage layer
+- Files changed: test/unit/storage.test.ts (new)
+- **Learnings for future iterations:**
+  - Use DADGPT_DATA_DIR env var to override data directory for testing
+  - Create unique temp directories per test to avoid conflicts: `${os.tmpdir()}/dadgpt-test-${Date.now()}-${random}`
+  - Clean up temp directories in afterEach with fs.rm(dir, { recursive: true, force: true })
+  - Tests verify: write/read roundtrip, read non-existent, update creates/modifies, list files, remove, exists, ensureDir
+---
