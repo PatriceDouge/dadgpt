@@ -797,3 +797,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Projects are detected via `### Project Name` headers with `-` prefixed metadata lines
   - Parser accumulates items per section and saves when switching sections or hitting end of file
 ---
+
+## 2026-01-14 - P6-008
+- What was implemented: Created comprehensive unit tests for the dadgpt.md parser
+- Files changed: test/unit/parser/dadgpt-md.test.ts (new), test/fixtures/dadgpt.md (new)
+- **Learnings for future iterations:**
+  - Parser tests go in test/unit/parser/ directory, fixtures go in test/fixtures/
+  - Test fixture dadgpt.md contains sample goals, todos, family members, and projects
+  - 35 tests cover: goals (checkbox parsing, metadata, completion status), todos (priority, tags, due dates), family (relationship format, header format, bracketed names), projects (milestones, status, metadata), empty sections, edge cases
+  - Parser has a quirk: projects are only saved at end-of-file or when a new project header is found within the projects section (not when switching to another section)
+  - Use async tests with fs.readFile when reading from fixture files
+---
