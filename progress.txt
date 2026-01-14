@@ -601,3 +601,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Tags displayed in cyan brackets: [tag1, tag2]
   - Filters: --status/-s, --priority/-p, --tag/-t (case-insensitive), --json
 ---
+
+## 2026-01-14 - P5-007
+- What was implemented: Created comprehensive CLI integration tests using execa
+- Files changed: test/integration/cli.test.ts (new)
+- **Learnings for future iterations:**
+  - Integration tests go in test/integration/ directory
+  - Use execa to run CLI commands: `execa("npx", ["tsx", path.join(PROJECT_ROOT, "src/index.ts"), ...args], { cwd, env, reject: false })`
+  - Set `reject: false` on execa to avoid throwing on non-zero exit codes (allows testing error scenarios)
+  - CLI must run from project root (to find src/index.ts), but workDir can be set for commands like `init` that create files in cwd
+  - Use `path.resolve(__dirname, "../..")` to get PROJECT_ROOT from test file location
+  - Environment variables (DADGPT_DATA_DIR, DADGPT_HOME) allow test isolation with temp directories
+  - Create unique temp directories per test: `${os.tmpdir()}/dadgpt-cli-test-${Date.now()}-${random}`
+  - Clean up temp dirs in afterEach with `fs.rm(dir, { recursive: true, force: true })`
+  - Tests cover: init command (file creation, existing file warning, --force, templates), goals command (empty state, JSON output, filtering), todos command (empty state, JSON output, filtering), help command
+---
