@@ -1095,7 +1095,7 @@
         "Fixtures used consistently across tests"
       ],
       "priority": 63,
-      "passes": false,
+      "passes": true,
       "notes": ""
     },
     {

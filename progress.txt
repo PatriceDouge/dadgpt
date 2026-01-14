@@ -808,3 +808,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Parser has a quirk: projects are only saved at end-of-file or when a new project header is found within the projects section (not when switching to another section)
   - Use async tests with fs.readFile when reading from fixture files
 ---
+
+## 2026-01-14 - P6-009
+- What was implemented: Created test fixtures for consistent testing across the codebase
+- Files changed: test/fixtures/config.json (new), test/fixtures/sample-goals.json (new)
+- **Learnings for future iterations:**
+  - Test fixtures go in test/fixtures/ directory for reuse across multiple test files
+  - config.json fixture includes: providers (anthropic, openai with test keys), permissions, goalCategories, family members
+  - sample-goals.json fixture includes goals in all states: not_started, in_progress, paused, completed (no abandoned example currently)
+  - Goals fixture includes milestones with various completion states and progress percentages
+  - Fixtures use ULID-format IDs for consistency with actual storage patterns
+  - The existing dadgpt.md fixture (created in P6-008) works in conjunction with these JSON fixtures
+---
