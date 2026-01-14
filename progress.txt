@@ -138,3 +138,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Test that publish to non-existent event doesn't throw
   - Test that payload reference is preserved (same object, not copied)
 ---
+
+## 2026-01-13 - P2-001
+- What was implemented: Created Zod schemas for configuration validation
+- Files changed: src/config/schema.ts (new)
+- **Learnings for future iterations:**
+  - Config files go in src/config/ directory
+  - Zod schemas provide both runtime validation and TypeScript type inference
+  - Use z.infer<typeof Schema> to extract types from Zod schemas
+  - Default values in schemas using .default() method
+  - Export both schemas and inferred types for maximum flexibility
+---
