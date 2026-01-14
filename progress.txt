@@ -783,3 +783,17 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Default rules from config: allow (read, goal, todo, project, family), ask (write, bash)
   - When sorting by timestamp, add secondary sort key (ULID) for stable ordering when timestamps are equal
 ---
+
+## 2026-01-14 - P6-007
+- What was implemented: Created dadgpt.md parser to extract goals, todos, family, and projects from markdown
+- Files changed: src/parser/dadgpt-md.ts (new)
+- **Learnings for future iterations:**
+  - Parser files go in src/parser/ directory
+  - parseDadGPTMd(content) returns ParsedDadGPTMd with goals, todos, family, projects arrays
+  - Markdown checkbox syntax: `- [ ] Title` (unchecked) or `- [x] Title` (checked)
+  - Metadata lines use pattern: `- Key: Value` on indented lines after checkbox items
+  - Section detection uses regex: `##\s+Goals?$`, `##\s+Todos?$`, etc.
+  - Family members support two formats: `- **Relationship**: Name` or `### Name` headers
+  - Projects are detected via `### Project Name` headers with `-` prefixed metadata lines
+  - Parser accumulates items per section and saves when switching sections or hitting end of file
+---
