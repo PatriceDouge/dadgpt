@@ -456,3 +456,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Transition checks if state actually changed and returns "No Change" if event was invalid
   - Bus events: todo.created, todo.completed, todo.deleted
 ---
+
+## 2026-01-13 - P4-008
+- What was implemented: Created comprehensive unit tests for the Todo Tool
+- Files changed: test/unit/tool/todo.test.ts (new)
+- **Learnings for future iterations:**
+  - Todo Tool tests follow same patterns as Goal Tool tests (mock context, temp dir, Bus.clear())
+  - 32 tests cover: create (required/all fields, default priority), list (filters: status, priority, tag; sorting), get, complete shortcut, transitions (block/unblock, defer, reopen, cancel), delete
+  - Complete action returns "Already Complete" if todo is done, and "Error" if trying to complete from blocked state
+  - Invalid transitions return "No Change" title with message explaining why (unlike Goal which has final states check)
+  - Test sorting by verifying position of items in output string using indexOf()
+  - Use vi.fn() to spy on Bus events for todo.created, todo.completed, todo.deleted
+---
