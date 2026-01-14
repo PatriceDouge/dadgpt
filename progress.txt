@@ -662,3 +662,21 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Helper functions createUserMessage(), createAssistantMessage(), createToolCall() for constructing messages
   - Zod schemas enable runtime validation of messages loaded from storage
 ---
+
+## 2026-01-14 - P5-011
+- What was implemented: Created ChatLoop namespace for running AI conversations with tool processing
+- Files changed: src/session/loop.ts (new)
+- **Learnings for future iterations:**
+  - ChatLoop.run(sessionId, signal, options) is the main entry point for AI conversations
+  - Uses AI SDK's streamText for streaming responses from LLM
+  - The loop continues until the assistant finishes without tool calls or maxIterations reached
+  - Default maxIterations is 10 to prevent infinite loops
+  - Tool calls are processed sequentially within each iteration
+  - Handles abort signal for cancellation at multiple points (before loop, during streaming, between iterations)
+  - CoreMessage format from "ai" package: { role: "user" | "assistant" | "tool", content: string | ContentPart[] }
+  - Tool results use role: "tool" with content: [{ type: "tool-result", toolCallId, toolName, result }]
+  - Bus events published for tool lifecycle: tool.start, tool.complete, tool.error
+  - ChatLoopOptions allows callbacks for streaming: onTextChunk, onToolStart, onToolComplete, onToolError
+  - Final assistant message is saved to session storage when loop completes
+  - ChatLoopResult contains: content, toolCalls array, aborted flag, usage stats
+---
