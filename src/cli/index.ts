@@ -13,6 +13,7 @@ import { Log, type LogLevel } from "../util/log"
 import { runCommand } from "./commands/run"
 import { initCommand } from "./commands/init"
 import { authCommand } from "./commands/auth"
+import { goalsCommand } from "./commands/goals"
 
 /**
  * Global CLI options available to all commands.
@@ -74,6 +75,7 @@ export function buildCli() {
       .command(runCommand)
       .command(initCommand)
       .command(authCommand)
+      .command(goalsCommand)
 
       // Strict mode - fail on unknown commands/options
       .strict()
