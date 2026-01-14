@@ -623,8 +623,8 @@
         "Typecheck passes"
       ],
       "priority": 35,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Auto-registration of default tools will happen once tool implementations exist (P4-005 to P4-012)"
     },
     {
       "id": "P4-005",

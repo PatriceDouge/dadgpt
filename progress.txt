@@ -398,3 +398,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - ToolResult returns structured output (title, output, metadata?)
   - ToolExecution tracks execution state with status, timing, and error information
 ---
+
+## 2026-01-13 - P4-004
+- What was implemented: Created ToolRegistry namespace for central tool management
+- Files changed: src/tool/registry.ts (new)
+- **Learnings for future iterations:**
+  - ToolRegistry follows same namespace pattern as Log, Storage, Bus modules
+  - getToolsForAI() returns Record<string, AITool> format for Vercel AI SDK streamText/generateText
+  - AI SDK expects tools as Record with `parameters` (Zod schema), `description`, and `execute` function
+  - formatToolResult() converts ToolResult to string format for AI consumption
+  - Auto-registration of default tools deferred until tool implementations exist (P4-005+)
+  - Added has() and clear() utility methods for checking tool existence and testing
+---
