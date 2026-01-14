@@ -723,3 +723,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Message truncation adds "[Message truncated due to length]" suffix for user visibility
   - Log.warn() for non-fatal issues (invalid JSON), Log.debug() for expected conditions (empty files)
 ---
+
+## 2026-01-14 - P6-003
+- What was implemented: Created comprehensive unit tests for the Config system
+- Files changed: test/unit/config.test.ts (new)
+- **Learnings for future iterations:**
+  - Config tests require temporary directories with DADGPT_HOME env var override
+  - Create unique temp directories per test: `${os.tmpdir()}/dadgpt-config-test-${Date.now()}-${random}`
+  - Store and restore original env vars in beforeEach/afterEach for proper test isolation
+  - Config.invalidate() must be called between tests to clear cached config
+  - Test precedence chain: defaults < global config < project config < env vars
+  - Process.chdir() allows testing project-level config by changing to a temp project directory
+  - 15 tests cover: default config, global config merge, env var overrides, empty/invalid JSON handling, deep merge, caching, invalidate, save, precedence chain
+---
