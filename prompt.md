@@ -9,7 +9,7 @@ You are an autonomous coding agent working on a software project.
 3. Pick the **highest priority** user story where `passes: false`
 4. Implement that single user story
 5. Run quality checks (e.g., typecheck, lint, test - use whatever your project requires)
-6. Update AGENTS.md files if you discover reusable patterns (see below)
+6. Update progress.tsx files if you discover reusable patterns (see below)
 7. If checks pass, commit ALL changes with message: `feat: [Story ID] - [Story Title]`
 8. Update the PRD to set `passes: true` for the completed story
 9. Append your progress to `progress.txt`
@@ -20,7 +20,6 @@ APPEND to progress.txt (never replace, always append):
 
 ```
 ## [Date/Time] - [Story ID]
-Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
 - What was implemented
 - Files changed
 - **Learnings for future iterations:**
@@ -45,7 +44,7 @@ If you discover a **reusable pattern** that future iterations should know, add i
 
 Only add patterns that are **general and reusable**, not story-specific details.
 
-## Update AGENTS.md Files
+## Update progress.txt files with any learnings
 
 Before committing, check if any edited files have learnings worth preserving in nearby AGENTS.md files:
 
@@ -58,7 +57,7 @@ Before committing, check if any edited files have learnings worth preserving in 
    - Testing approaches for that area
    - Configuration or environment requirements
 
-**Examples of good AGENTS.md additions:**
+**Examples of good progress.txt learnings additions:**
 
 - "When modifying X, also update Y to keep them in sync"
 - "This module uses pattern Z for all API calls"
