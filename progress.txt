@@ -288,3 +288,14 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - flexGrow={1} on outer Box allows component to expand to fill available space
   - Export Message interface for use by parent components
 ---
+
+## 2026-01-13 - P3-006
+- What was implemented: Created standalone reusable Spinner component for loading states
+- Files changed: src/tui/components/Spinner.tsx (new)
+- **Learnings for future iterations:**
+  - Spinner uses 10 braille characters: ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+  - Animation interval of 80ms provides smooth rotation effect
+  - useEffect cleanup function with clearInterval prevents memory leaks on unmount
+  - Standalone Spinner component can be imported and reused in other components (ChatView has inline version)
+  - Use constants (SPINNER_FRAMES, ANIMATION_INTERVAL) for maintainability
+---
