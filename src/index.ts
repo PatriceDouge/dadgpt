@@ -1,7 +1,10 @@
 // DadGPT - AI-powered personal command center
 // Main entry point
 
-console.log("DadGPT - Your AI-powered personal command center")
-console.log("Version: 0.1.0")
-console.log("")
-console.log("Run 'dadgpt --help' for usage information.")
+import { runCli } from "./cli/index"
+
+// Run the CLI
+runCli().catch((err) => {
+  console.error("Fatal error:", err)
+  process.exit(1)
+})
