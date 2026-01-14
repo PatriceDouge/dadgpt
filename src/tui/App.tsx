@@ -53,7 +53,7 @@ export function App({
 
   /**
    * Handle message submission from input box.
-   * Adds user message to session and sends to AI.
+   * Adds user message to session, sends to AI, and adds assistant reply.
    */
   const handleSubmit = async (content: string): Promise<void> => {
     if (!session) return
@@ -64,8 +64,16 @@ export function App({
       content,
     })
 
-    // Send to AI
-    await sendMessage(content)
+    // Send to AI and get response
+    const reply = await sendMessage(content)
+
+    // Add assistant reply to session if we got one
+    if (reply) {
+      await addMessage({
+        role: "assistant",
+        content: reply,
+      })
+    }
   }
 
   // Show loading state while config is loading

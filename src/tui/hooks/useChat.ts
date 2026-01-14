@@ -1,28 +1,11 @@
 import { useState, useCallback, useRef, useEffect } from "react"
 import { streamText, type CoreMessage } from "ai"
-import { anthropic } from "@ai-sdk/anthropic"
-import { openai } from "@ai-sdk/openai"
 import { Config } from "../../config/config"
 import { Storage } from "../../storage/storage"
-import { createId } from "../../util/id"
 import { Log } from "../../util/log"
 import { ProviderError } from "../../util/errors"
+import { Provider } from "../../provider/provider"
 import type { Message } from "./useSession"
-
-/**
- * Get the language model based on provider and model configuration.
- * Reads API keys from environment variables.
- */
-function getModel(provider: string, model: string) {
-  switch (provider) {
-    case "anthropic":
-      return anthropic(model)
-    case "openai":
-      return openai(model)
-    default:
-      throw new Error(`Unknown provider: ${provider}`)
-  }
-}
 
 /**
  * Hook for AI chat interactions.
@@ -56,11 +39,12 @@ export function useChat(sessionId?: string) {
 
   /**
    * Send a message to the AI and stream the response.
-   * Loads config, gets model, streams response, and saves to storage.
+   * Loads config, gets model, streams response.
+   * Returns the final content so the caller can save it to the session.
    */
   const sendMessage = useCallback(
-    async (_content: string) => {
-      if (!sessionId) return
+    async (_content: string): Promise<string | null> => {
+      if (!sessionId) return null
 
       // Cancel any existing request
       abortControllerRef.current?.abort()
@@ -73,7 +57,7 @@ export function useChat(sessionId?: string) {
 
       try {
         const config = await Config.get()
-        const model = getModel(config.defaultProvider, config.defaultModel)
+        const model = await Provider.getModel(config.defaultProvider, config.defaultModel)
 
         // Load conversation history
         const msgIds = await Storage.list(["sessions", sessionId, "messages"])
@@ -106,43 +90,34 @@ export function useChat(sessionId?: string) {
           // Check for abort between chunks
           if (signal.aborted) {
             Log.debug("AI request cancelled")
-            return
+            return null
           }
           fullContent += chunk
           setStreamingContent(fullContent)
         }
 
-        // Don't save if the request was aborted
+        // Don't return content if the request was aborted
         if (signal.aborted) {
-          return
+          return null
         }
 
-        // Save assistant message to storage when complete
-        const assistantMessage: Message = {
-          id: createId(),
-          role: "assistant",
-          content: fullContent,
-          timestamp: Date.now(),
-        }
-
-        await Storage.write(
-          ["sessions", sessionId, "messages", assistantMessage.id],
-          assistantMessage
-        )
-
-        // Clear streaming content after saving
+        // Clear streaming content - caller will add to messages
         setStreamingContent("")
+
+        // Return the full content for the caller to save
+        return fullContent
       } catch (err) {
         // Don't report abort errors as actual errors
         if (err instanceof Error && err.name === "AbortError") {
           Log.debug("AI request aborted")
-          return
+          return null
         }
 
         // Classify and handle different error types
         const error = classifyError(err)
         Log.formatAndLogError("AI request failed", err)
         setError(error)
+        return null
       } finally {
         setIsLoading(false)
         abortControllerRef.current = null
