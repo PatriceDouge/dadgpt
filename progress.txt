@@ -183,3 +183,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Progress clamping: Math.min(100, Math.max(0, value)) ensures 0-100 range
   - createGoalContext() helper provides default values for partial input
 ---
+
+## 2026-01-13 - P2-005
+- What was implemented: Created comprehensive unit tests for the goal state machine
+- Files changed: test/unit/state/goal.machine.test.ts (new)
+- **Learnings for future iterations:**
+  - State machine tests go in test/unit/state/ directory
+  - XState v5 uses `createActor(machine, { snapshot: machine.resolveState({ value, context }) })` to test with specific context
+  - Use `goalMachine.resolveState()` to create a valid snapshot with custom context
+  - Final states cause the actor to stop - sending events to them logs warnings but doesn't throw
+  - Mock Date.now with vi.spyOn(Date, "now") for consistent test results
+  - Always call actor.stop() in tests to clean up
+---
