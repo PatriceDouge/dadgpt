@@ -171,3 +171,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Environment variables supported: DADGPT_PROVIDER, DADGPT_MODEL
   - Config is cached until invalidate() is called
 ---
+
+## 2026-01-13 - P2-004
+- What was implemented: Created XState goal lifecycle state machine
+- Files changed: src/state/goal.machine.ts (new)
+- **Learnings for future iterations:**
+  - State machines go in src/state/ directory
+  - XState v5 uses createMachine with types: {} as { context: T, events: E } for type inference
+  - Use assign() from xstate for action creators that update context
+  - Final states declared with type: "final"
+  - Progress clamping: Math.min(100, Math.max(0, value)) ensures 0-100 range
+  - createGoalContext() helper provides default values for partial input
+---
