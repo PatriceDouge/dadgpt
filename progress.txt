@@ -630,3 +630,19 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - AgentResult tracks content, toolCalls, and optional usage statistics
   - DadAgent auto-registers via import side effect in dad.ts
 ---
+
+## 2026-01-14 - P5-009
+- What was implemented: Created Session System with Session namespace for managing chat sessions
+- Files changed: src/session/session.ts (new)
+- **Learnings for future iterations:**
+  - Session files go in src/session/ directory
+  - Session namespace follows same pattern as Storage, Log, Bus (namespace with async functions)
+  - SessionData interface: id, title, createdAt, updatedAt
+  - MessageData interface: id, role ("user" | "assistant"), content, timestamp
+  - Session.create() generates ULID and publishes session.created event
+  - Session.list() returns sessions sorted by updatedAt descending (most recent first)
+  - Session.getMessages() returns messages sorted by timestamp ascending
+  - Session.addMessage() also updates the session's updatedAt timestamp and publishes session.message event
+  - Storage paths: sessions/{sessionId}/session.json for session data, sessions/{sessionId}/messages/{messageId}.json for messages
+  - Session.remove() deletes all messages first before deleting the session
+---
