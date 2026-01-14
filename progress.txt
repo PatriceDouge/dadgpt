@@ -646,3 +646,19 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Storage paths: sessions/{sessionId}/session.json for session data, sessions/{sessionId}/messages/{messageId}.json for messages
   - Session.remove() deletes all messages first before deleting the session
 ---
+
+## 2026-01-14 - P5-010
+- What was implemented: Created message type definitions with Zod schemas for session messages
+- Files changed: src/session/message.ts (new)
+- **Learnings for future iterations:**
+  - Message types are separate from SessionData in session.ts - they provide more detailed typing
+  - UserMessage has: id, sessionId, role ("user"), content, timestamp
+  - AssistantMessage has: id, sessionId, role ("assistant"), content, timestamp, modelInfo?, usage?, toolCalls?
+  - ToolCall tracks: id, toolId, status, input, output?, error?, startedAt, completedAt?
+  - ToolCallStatus mirrors ToolStatus from tool/types.ts: "pending" | "running" | "completed" | "error"
+  - Usage tracks token counts: promptTokens, completionTokens, totalTokens
+  - ModelInfo tracks: provider, model
+  - MessageSchema uses z.discriminatedUnion("role", [...]) for type-safe message parsing
+  - Helper functions createUserMessage(), createAssistantMessage(), createToolCall() for constructing messages
+  - Zod schemas enable runtime validation of messages loaded from storage
+---
