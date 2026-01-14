@@ -1,0 +1,155 @@
+{
+  "goals": [
+    {
+      "id": "goal_01HQ1234567890HEALTH1",
+      "title": "Run a marathon",
+      "category": "Health",
+      "description": "Complete a full 26.2 mile marathon",
+      "progress": 100,
+      "milestones": [
+        {
+          "id": "milestone_01HQ1234567890MS1",
+          "title": "Run 5K",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS2",
+          "title": "Run 10K",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS3",
+          "title": "Run half marathon",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS4",
+          "title": "Complete marathon",
+          "completed": true
+        }
+      ],
+      "dueDate": "2024-06-01",
+      "createdAt": 1704067200000,
+      "updatedAt": 1717200000000,
+      "state": "completed"
+    },
+    {
+      "id": "goal_01HQ1234567890PERSONAL1",
+      "title": "Learn Spanish",
+      "category": "Personal",
+      "description": "Become conversational in Spanish",
+      "progress": 35,
+      "milestones": [
+        {
+          "id": "milestone_01HQ1234567890MS5",
+          "title": "Complete beginner course",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS6",
+          "title": "Have first conversation",
+          "completed": false
+        },
+        {
+          "id": "milestone_01HQ1234567890MS7",
+          "title": "Watch movie without subtitles",
+          "completed": false
+        }
+      ],
+      "dueDate": "2024-12-31",
+      "createdAt": 1704067200000,
+      "updatedAt": 1710288000000,
+      "state": "in_progress"
+    },
+    {
+      "id": "goal_01HQ1234567890FINANCE1",
+      "title": "Save for vacation",
+      "category": "Finance",
+      "description": "Save $5000 for family vacation to Hawaii",
+      "progress": 60,
+      "milestones": [
+        {
+          "id": "milestone_01HQ1234567890MS8",
+          "title": "Save first $1000",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS9",
+          "title": "Save $2500",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS10",
+          "title": "Save $5000",
+          "completed": false
+        }
+      ],
+      "dueDate": "2024-08-15",
+      "createdAt": 1704067200000,
+      "updatedAt": 1712966400000,
+      "state": "in_progress"
+    },
+    {
+      "id": "goal_01HQ1234567890WORK1",
+      "title": "Get promoted to Senior Engineer",
+      "category": "Work",
+      "description": "Achieve promotion to senior level",
+      "progress": 0,
+      "milestones": [
+        {
+          "id": "milestone_01HQ1234567890MS11",
+          "title": "Complete tech lead training",
+          "completed": false
+        },
+        {
+          "id": "milestone_01HQ1234567890MS12",
+          "title": "Lead major project",
+          "completed": false
+        },
+        {
+          "id": "milestone_01HQ1234567890MS13",
+          "title": "Mentor junior developers",
+          "completed": false
+        }
+      ],
+      "dueDate": "2025-06-30",
+      "createdAt": 1704067200000,
+      "updatedAt": 1704067200000,
+      "state": "not_started"
+    },
+    {
+      "id": "goal_01HQ1234567890FAMILY1",
+      "title": "Plan family reunion",
+      "category": "Family",
+      "description": "Organize annual family reunion for summer",
+      "progress": 20,
+      "milestones": [
+        {
+          "id": "milestone_01HQ1234567890MS14",
+          "title": "Pick venue",
+          "completed": true
+        },
+        {
+          "id": "milestone_01HQ1234567890MS15",
+          "title": "Send invitations",
+          "completed": false
+        },
+        {
+          "id": "milestone_01HQ1234567890MS16",
+          "title": "Finalize catering",
+          "completed": false
+        }
+      ],
+      "dueDate": "2024-07-15",
+      "createdAt": 1706745600000,
+      "updatedAt": 1709424000000,
+      "state": "paused"
+    }
+  ],
+  "metadata": {
+    "description": "Sample goals fixture for testing DadGPT goal functionality",
+    "version": "1.0.0",
+    "categories": ["Health", "Family", "Work", "Personal", "Finance"],
+    "states": ["not_started", "in_progress", "paused", "completed", "abandoned"]
+  }
+}

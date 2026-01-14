@@ -1,0 +1,49 @@
+{
+  "defaultProvider": "anthropic",
+  "defaultModel": "claude-sonnet-4-20250514",
+  "theme": "dark",
+  "providers": {
+    "anthropic": {
+      "id": "anthropic",
+      "apiKey": "sk-ant-test-key-123"
+    },
+    "openai": {
+      "id": "openai",
+      "apiKey": "sk-openai-test-key-456"
+    }
+  },
+  "permissions": {
+    "allow": ["read", "goal", "todo", "project", "family"],
+    "deny": [],
+    "ask": ["write", "bash"]
+  },
+  "goalCategories": [
+    "Health",
+    "Family",
+    "Work",
+    "Personal",
+    "Finance"
+  ],
+  "family": [
+    {
+      "id": "family_01HQ1234567890ABCDEF",
+      "name": "Sarah",
+      "relationship": "Wife",
+      "birthday": "1990-05-15",
+      "notes": "Loves hiking and photography"
+    },
+    {
+      "id": "family_01HQ1234567890ABCDEG",
+      "name": "Jake",
+      "relationship": "Son",
+      "birthday": "2015-08-22",
+      "notes": "Plays soccer on weekends"
+    },
+    {
+      "id": "family_01HQ1234567890ABCDEH",
+      "name": "Emma",
+      "relationship": "Daughter",
+      "birthday": "2018-03-10"
+    }
+  ]
+}
