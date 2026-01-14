@@ -374,3 +374,15 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - getModelInfo(modelId) helper function returns ModelInfo or undefined
   - Supported models: claude-sonnet-4-20250514, claude-3-5-haiku-20241022, gpt-4o, gpt-4o-mini
 ---
+
+## 2026-01-13 - P4-002
+- What was implemented: Created Provider namespace for unified LLM provider abstraction
+- Files changed: src/provider/provider.ts (new)
+- **Learnings for future iterations:**
+  - Use createAnthropic() and createOpenAI() from AI SDK to create provider instances with custom API keys
+  - API key is passed to provider constructor, not to model settings (e.g., `createAnthropic({ apiKey })`)
+  - Provider.getModel() is async because it loads config to get API keys
+  - API key resolution order: config.providers[id].apiKey > environment variable
+  - LanguageModelV1 is the correct type for AI SDK language models
+  - Provider namespace exports listProviders(), isSupported(), getProviderInfo() utility functions
+---
