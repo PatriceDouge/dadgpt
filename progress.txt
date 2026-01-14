@@ -324,3 +324,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Bus.publish is used to notify other parts of the app about session events
   - Storage paths follow pattern: ["sessions", sessionId, "session"] and ["sessions", sessionId, "messages", messageId]
 ---
+
+## 2026-01-13 - P3-009
+- What was implemented: Created useChat hook for AI chat interactions with streaming responses
+- Files changed: src/tui/hooks/useChat.ts (new)
+- **Learnings for future iterations:**
+  - useChat hook handles AI streaming responses using Vercel AI SDK's streamText
+  - Returns isLoading, streamingContent, error, and sendMessage
+  - Import { streamText, type CoreMessage } from "ai" for AI SDK streaming
+  - Use @ai-sdk/anthropic and @ai-sdk/openai for provider-specific model initialization
+  - anthropic(model) and openai(model) create the language model instances
+  - sendMessage loads all messages from storage (already saved by useSession) before sending to LLM
+  - Use for await...of loop to iterate over result.textStream for streaming chunks
+  - Clear streamingContent after saving assistant message to avoid duplicate display
+  - Prefix unused parameters with underscore (_content) to satisfy eslint no-unused-vars rule
+---
