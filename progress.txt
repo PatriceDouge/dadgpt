@@ -128,3 +128,13 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Events object provides type-safe event definitions with payload types
   - EventName and EventPayload<E> types exported for type-safe usage
 ---
+
+## 2026-01-13 - P1-012
+- What was implemented: Created comprehensive unit tests for the Event Bus
+- Files changed: test/unit/bus.test.ts (new)
+- **Learnings for future iterations:**
+  - Use vi.spyOn(console, "error").mockImplementation(() => {}) to suppress expected console output in tests
+  - Bus.clear() in beforeEach ensures test isolation between tests
+  - Test that publish to non-existent event doesn't throw
+  - Test that payload reference is preserved (same object, not copied)
+---
