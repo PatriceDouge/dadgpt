@@ -66,6 +66,12 @@ export const Events = {
   "todo.completed": {} as { todoId: string },
   "todo.deleted": {} as { todoId: string },
 
+  // Project events
+  "project.created": {} as { projectId: string },
+  "project.updated": {} as { projectId: string; changes: Record<string, unknown> },
+  "project.completed": {} as { projectId: string },
+  "project.deleted": {} as { projectId: string },
+
   // Session events
   "session.created": {} as { sessionId: string },
   "session.message": {} as { sessionId: string; messageId: string },
