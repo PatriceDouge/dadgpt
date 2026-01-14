@@ -1,10 +1,16 @@
 # DadGPT Implementation Progress
 
-## Completed Tasks
-- None yet
+## Codebase Patterns
+<!-- Reusable patterns discovered during implementation - add here as you learn -->
+- Use pnpm (not bun) for all package management
+- Use node:fs/promises for file operations (not Bun APIs)
+- Use vitest for testing (import from "vitest")
+- Use tsx for TypeScript execution
+- Storage files go in ~/.dadgpt/data/
+- All IDs are ULIDs for sortability
 
-## Current Status
-- Starting fresh implementation
+---
 
-## Next Up
-- Phase 1: Foundation (project setup, utilities, storage, event bus)
+## Progress Log
+
+<!-- Append progress entries below this line -->
