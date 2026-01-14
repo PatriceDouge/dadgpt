@@ -522,3 +522,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Tools follow Tool<TParams> interface pattern from src/tool/types.ts
   - File tools are simpler than entity tools (Goal/Todo/Project) - no state machines or bus events
 ---
+
+## 2026-01-14 - P5-001
+- What was implemented: Created CLI entry point with yargs configuration
+- Files changed: src/cli/index.ts (new), src/index.ts (updated)
+- **Learnings for future iterations:**
+  - CLI files go in src/cli/ directory, commands go in src/cli/commands/
+  - Use yargs with hideBin(process.argv) for proper argument parsing
+  - Global options use `global: true` to be available to all subcommands
+  - Middleware runs before command execution - good for initializing logging
+  - buildCli() returns configured yargs instance for testing/extension
+  - runCli() is async to support async command handlers
+  - Strict mode catches unknown options and commands
+---
