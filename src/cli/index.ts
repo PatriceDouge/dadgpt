@@ -14,6 +14,7 @@ import { runCommand } from "./commands/run"
 import { initCommand } from "./commands/init"
 import { authCommand } from "./commands/auth"
 import { goalsCommand } from "./commands/goals"
+import { todosCommand } from "./commands/todos"
 
 /**
  * Global CLI options available to all commands.
@@ -76,6 +77,7 @@ export function buildCli() {
       .command(initCommand)
       .command(authCommand)
       .command(goalsCommand)
+      .command(todosCommand)
 
       // Strict mode - fail on unknown commands/options
       .strict()
