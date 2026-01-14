@@ -468,3 +468,18 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - Test sorting by verifying position of items in output string using indexOf()
   - Use vi.fn() to spy on Bus events for todo.created, todo.completed, todo.deleted
 ---
+
+## 2026-01-13 - P4-009
+- What was implemented: Created Project Tool with full CRUD operations and state machine integration
+- Files changed: src/tool/project.ts (new), src/bus/bus.ts (updated with project events)
+- **Learnings for future iterations:**
+  - Project Tool follows same patterns as Goal and Todo tools (StoredProject extends ProjectContext with state field)
+  - Projects are stored at ["projects", id] path in storage
+  - Uses createTimestampedId("project") for readable IDs like "project_01HXYZ..."
+  - Actions: list, create, get, update, transition, addMilestone, delete
+  - addMilestone generates milestone ID using createTimestampedId("milestone")
+  - Project states: planning, active, on_hold, completed, cancelled (completed/cancelled are final)
+  - ADD_MILESTONE works from both planning and active states
+  - COMPLETE_MILESTONE only works from active state
+  - Bus events added: project.created, project.updated, project.completed, project.deleted
+---
