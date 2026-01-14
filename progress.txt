@@ -535,3 +535,16 @@ Thread: https://ampcode.com/threads/$AMP_CURRENT_THREAD_ID
   - runCli() is async to support async command handlers
   - Strict mode catches unknown options and commands
 ---
+
+## 2026-01-14 - P5-002
+- What was implemented: Created default run command for interactive TUI
+- Files changed: src/cli/commands/run.ts (new), src/cli/index.ts (updated)
+- **Learnings for future iterations:**
+  - Default command uses '$0 [message..]' syntax in yargs to be the fallback command
+  - Variadic positional arguments use `array: true` in yargs config
+  - CommandModule<GlobalOptions, RunOptions> generic types for type-safe command definition
+  - Use ink's render() function to render React components to terminal
+  - render() returns { waitUntilExit } which is a Promise that resolves when app exits
+  - React.createElement() used instead of JSX in .ts files (not .tsx)
+  - --continue/-c and --session/-s options for session continuation
+---
